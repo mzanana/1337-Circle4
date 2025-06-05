@@ -1,2 +1,3 @@
-<p style="text-align: center; font-size: 50px;"><b>Minishell</b></p>
+<h1 align= "center"><b>Minishell</b></h1>
+
 
