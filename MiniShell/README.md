@@ -15,13 +15,15 @@ We will take look at how to work with multiple processes inside our C programs, 
 
 int main ()
 {
+	printf("before fork()\n");
 	fork();
-	printf("Hello world!");
+	printf("After calling the function fork()\n");
 }
 ```
 
 If we use the fork() function on a normal code like printing `hello world` we gonna notice that the message is printed twice, but why ?
 <p align="center"> 
-	<img src="https://i.imgur.com/3cIDvk1.png" width=500>
+	<img src="https://i.imgur.com/Lu0pybW.png" width=400>
 </p>
 
+What happen when calling fork() function is that a new **child** process is born and start executing the following lines 
