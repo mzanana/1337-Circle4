@@ -30,3 +30,11 @@ If we use the fork() function on a normal code like printing `hello world` we go
 **What happened ?**  
 When calling `fork()` function a new **child process**  is born and start executing the following lines.  
 The `fork()` function return an integer that represent the `Id` of the process, generally the child process got the `id = 0` when success  and `id = -1` if it fails.  
+
+**Fork multiple times**  
+The mathematical equation on multiple forks is : `2^n` so 2 forks gives us 2^2 processes which is 4, and for 4 forks we get 16 processes.   
+
+On this example there is two forks on the main function, if we run the program we gonna notice that 4 "hello world" are printed.  
+<p align="center"> 
+	<img src="https://i.imgur.com/IZNC3GT.png" width=400>
+</p>
