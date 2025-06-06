@@ -21,9 +21,12 @@ int main ()
 }
 ```
 
-If we use the fork() function on a normal code like printing `hello world` we gonna notice that the message is printed twice, but why ?
+If we use the fork() function on a normal code like printing `hello world` we gonna notice that the message is printed twice, but why ?  
+
 <p align="center"> 
 	<img src="https://i.imgur.com/Lu0pybW.png" width=400>
 </p>
 
-What happen when calling fork() function is that a new **child** process is born and start executing the following lines 
+**What happened ?**  
+When calling `fork()` function a new **child process**  is born and start executing the following lines.  
+The `fork()` function return an integer that represent the `Id` of the process, generally the child process got the `id = 0` when success  and `id = -1` if it fails.  
