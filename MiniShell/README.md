@@ -46,7 +46,6 @@ On this example there is two forks on the main function, if we run the program w
 	<img src="https://i.imgur.com/IZNC3GT.png" width=400>
 </p>
 
-### How to `wait` for processes to finish
-
+**How to `wait` for processes to finish**  
 The `wait()` function is used in C by a parent process to pause its execution until one of its child processes has finished executing.   
 It returns the process ID of the terminated child process, if there are no child processes to wait for, or if an error occurs it returns `-1`.  
