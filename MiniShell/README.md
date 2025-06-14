@@ -3,8 +3,8 @@
 ---
  **Table of Contents :**  
 [Processes](#processes)   
---- 
 
+---
 # Processes
 
 We will take look at how to work with multiple processes inside our C programs, how to communicate between them.  
