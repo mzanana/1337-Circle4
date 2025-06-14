@@ -1,7 +1,9 @@
 <h1 align= "center"><b>Minishell</b></h1>
 
-### Table of Contents
--[Processes](#processes)  
+---
+ **Table of Contents :**  
+[Processes](#processes)   
+--- 
 
 # Processes
 
