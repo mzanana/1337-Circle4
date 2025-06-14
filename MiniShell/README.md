@@ -9,6 +9,9 @@
 
 We will take a look how to work with multiple processes inside our C programs and how to communicate between them.  
 
+**But first! What is a process ?**  
+A process is an instance of a computer program that is being executed, the program is a static set of instructions, while the process is a dynamic execution of those instructions.  
+
 ## fork() Function 
 
 `fork()` is a system call used for creating a new process in Linux systems which is called the **child process**, it returns :  
@@ -49,3 +52,4 @@ On this example there is two forks on the main function, if we run the program w
 **How to `wait` for processes to finish**  
 The `wait()` function is used in C by a parent process to pause its execution until one of its child processes has finished executing.   
 It returns the process ID of the terminated child process, if there are no child processes to wait for, or if an error occurs it returns `-1`.  
+ 
