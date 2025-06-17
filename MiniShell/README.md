@@ -52,4 +52,23 @@ On this example there is two forks on the main function, if we run the program w
 **How to `wait` for processes to finish**  
 The `wait()` function is used in C by a parent process to pause its execution until one of its child processes has finished executing.   
 It returns the process ID of the terminated child process, if there are no child processes to wait for, or if an error occurs it returns `-1`.  
- 
+
+### Processes IDs
+
+**Process IDs** are just identification numbers of processes, each process in Linux has its own number ID that is **unique**.  
+To get the process ID of a process we call the function **`getpid();`** and it returns an `pid_t` represented as an integer.  
+```C
+#include <stdio.h>
+#include <unistd.h>
+
+int main ()
+{
+        printf("%d", getpid());
+        return 0;
+}
+```
+
+<p align="center">
+	<img src="https://i.imgur.com/M05csCR.png"  width="350">
+</p>
+
