@@ -12,7 +12,7 @@ We will take a look how to work with multiple processes inside our C programs an
 **But first! What is a process ?**  
 A process is an instance of a computer program that is being executed, the program is a static set of instructions, while the process is a dynamic execution of those instructions.  
 
-## fork() Function 
+## Fork Function 
 
 `fork()` is a system call used for creating a new process in Linux systems which is called the **child process**, it returns :  
 + **Negative value** `-1` if the creation of a child process was failed;  
@@ -41,19 +41,11 @@ If we use the `fork()` function on a normal code like printing `After calling th
 When calling `fork()` function a new **child process**  is born and start executing **the following lines.**   
 The `fork()` function return an integer that represent the `Id` of the process, the child process always got the `id = 0` when success  and `id = -1` if it fails.  
 
-**Fork multiple times**  
-The mathematical equation on multiple forks is : `2^n` so 2 forks produce 4 processes, and for 4 forks 16 processes.   
-
-On this example there is two forks on the main function, if we run the program we gonna notice that 4 "hello world" are printed.  
-<p align="center"> 
-	<img src="https://i.imgur.com/IZNC3GT.png" width=400>
-</p>
-
 **How to `wait` for processes to finish**  
-The `wait()` function is used in C by a parent process to pause its execution until one of its child processes has finished executing.   
-It returns the process ID of the terminated child process, if there are no child processes to wait for, or if an error occurs it returns `-1`.  
+The `wait()` function is used in C by a parent process to pause its execution until **one** of its child processes has finished executing.   
+It returns the process ID of the terminated child process, if there are no child processes to wait for, or if an error occurs it returns `-1`, example of an example when there is no children to wait.  
 
-### Processes IDs
+## Processes IDs
 
 **Process IDs** are just identification numbers of running processes assigned by the operating system, each process in Linux has its own number ID that is **unique**.  
 
@@ -107,3 +99,69 @@ int main
 	<img src="https://i.imgur.com/BpJL206.png"  width="550">
 </p>
 
+## Fork multiple times
+ 
+The mathematical equation on multiple forks is : `2^n` so 2 forks produce 4 processes, and for 4 forks 16 processes.   
+
+On this example there is two forks on the main function, if we run the program we gonna notice that 4 "hello world" are printed.  
+<p align="center"> 
+	<img src="https://i.imgur.com/IZNC3GT.png" width=400>
+</p>
+
+
+Let's make a code of this situation :   
+```C
+#include <stdio.h>
+#include <unistd.h>
+
+int main ()
+{
+	int id1;
+	int id2;
+
+	id1 = fork();
+	id2 = fork();
+}
+```
+
+Let's visualize that's going on here :  
+<p align="center"> 
+	<img src="https://i.imgur.com/wLGn2jL.png" width="500">
+</p>
+
+```C
+#include <stdio.h>
+#include <unistd.h>
+
+int main ()
+{
+	int id1;
+	int id2;
+
+	id1 = fork();
+	id2 = fork();
+	if (!id1)
+	{
+		if (!id2)
+			printf("We are process y\n");
+		else
+			printf("We are process x\n");
+	}
+	else
+	{
+		if (!id2)
+			printf("We are process z\n");
+		else
+			printf("We are the parent process!\n");
+	}
+	while (wait(NULL) != -1 || errno != ECHILD);
+	return (0);
+}
+```
+**what `wait(NULL) != -1` mean ?**  
+The `wait()` function return `-1` when it fails or where there is no child to wait
+**What `errno`, `ECHILD` stands for ?**  
++ **`errno` :** is a global variable defined in `<errno.h>` that stores an error code when a function fails.   
+  Error code is a number or a symbol used by a program or operating system to indicate that something went wrong, for example when a program tries to do something it might fail, instead of just saying "it failed" the system gives an error code (a number) that explains why it failed;
+
++ **`ECHILD` :** is a specific error code stored in `errno`, it means **NO CHILD PROCESS!**, we get `ECHILD` when calling `wait()` and there is no child process to wait for, so when checking `errno != ECHILD` that's mean that the while loop should check if there is a child to execute what is inside the loop;  
