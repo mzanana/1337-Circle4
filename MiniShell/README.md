@@ -159,9 +159,11 @@ int main ()
 }
 ```
 **what `wait(NULL) != -1` mean ?**  
-The `wait()` function return `-1` when it fails or where there is no child to wait
+The `wait()` function return `-1` when it fails or where there is no child to wait;  
+
 **What `errno`, `ECHILD` stands for ?**  
 + **`errno` :** is a global variable defined in `<errno.h>` that stores an error code when a function fails.   
   Error code is a number or a symbol used by a program or operating system to indicate that something went wrong, for example when a program tries to do something it might fail, instead of just saying "it failed" the system gives an error code (a number) that explains why it failed;
 
 + **`ECHILD` :** is a specific error code stored in `errno`, it means **NO CHILD PROCESS!**, we get `ECHILD` when calling `wait()` and there is no child process to wait for, so when checking `errno != ECHILD` that's mean that the while loop should check if there is a child to execute what is inside the loop;  
+
