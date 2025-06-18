@@ -65,6 +65,7 @@ To get the process ID of a process we call the function **`getpid();`** It retur
 ```C
 #include <stdio.h>
 #include <unistd.h>
+#include <sys/wait.h>
 
 int main ()
 {
@@ -72,8 +73,12 @@ int main ()
 
         i = fork();
         if (!i)
+        {
                 sleep(1);
-        printf("Current ID : %d, Parent ID : %d", getpid(), getppid());
+                printf("Child Process : Current ID : %d, Parent ID : %d", getpid(), getppid());
+        }
+        else
+                printf("Main Process : Current ID : %d, Parent ID : %d", getpid(), getppid());
         printf("\n");
         return 0;
 }
@@ -81,8 +86,24 @@ int main ()
 ```
 
 <p align="center">
-	<img src="https://i.imgur.com/mCvEaDI.png"  width="450">
+	<img src="https://i.imgur.com/El1FwYI.png"  width="650">
 </p>
 
-We'll notice at the previous code that the parent of the child process is not the same as the main process, why is that ?  
-So because we sleep the child process, the main process which is the current child parent process has been terminated, so while the child process continue after the sleep function a new process assigned to it as its parent.  
+We'll notice that the parent process of the child process is not the main process, why is that ?  
+So because we sleep the child process, the main process which is the current child parent process has been terminated, so while the child process continue after sleeping, a new process assigned to it as its new parent process.  
+
+That's why we need always to use the `wait()` function so the parent process wait until its child process terminate and then continue, simply we add  the next line to our code :  
+```C
+int main
+{
+	// previous code
+	if (i)
+		wait(NULL);
+	return (0);
+}
+```
+
+<p align="center">
+	<img src="https://i.imgur.com/BpJL206.png"  width="550">
+</p>
+
