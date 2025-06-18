@@ -55,20 +55,34 @@ It returns the process ID of the terminated child process, if there are no child
 
 ### Processes IDs
 
-**Process IDs** are just identification numbers of processes, each process in Linux has its own number ID that is **unique**.  
-To get the process ID of a process we call the function **`getpid();`** and it returns an `pid_t` represented as an integer.  
+**Process IDs** are just identification numbers of running processes assigned by the operating system, each process in Linux has its own number ID that is **unique**.  
+
+**`getpid();` :**  
+To get the process ID of a process we call the function **`getpid();`** It returns an `pid_t` represented as an integer.  
+ **`getppid();` :**  
+ The function that help us to get directly the parent ID of a process is `getpid();` by reference to get the parent process ID.  
+
 ```C
 #include <stdio.h>
 #include <unistd.h>
 
 int main ()
 {
-        printf("%d", getpid());
+        int  i;
+
+        i = fork();
+        if (!i)
+                sleep(1);
+        printf("Current ID : %d, Parent ID : %d", getpid(), getppid());
+        printf("\n");
         return 0;
 }
+
 ```
 
 <p align="center">
-	<img src="https://i.imgur.com/M05csCR.png"  width="350">
+	<img src="https://i.imgur.com/mCvEaDI.png"  width="450">
 </p>
 
+We'll notice at the previous code that the parent of the child process is not the same as the main process, why is that ?  
+So because we sleep the child process, the main process which is the current child parent process has been terminated, so while the child process continue after the sleep function a new process assigned to it as its parent.  
