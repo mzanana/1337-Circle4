@@ -167,3 +167,12 @@ The `wait()` function return `-1` when it fails or where there is no child to wa
 
 + **`ECHILD` :** is a specific error code stored in `errno`, it means **NO CHILD PROCESS!**, we get `ECHILD` when calling `wait()` and there is no child process to wait for, so when checking `errno != ECHILD` that's mean that the while loop should check if there is a child to execute what is inside the loop;  
 
+
+## Pipes
+
+Pipe() system call it is a file-like that lives in the memory not on the disk, a connection between two processes,  pipe() is one-way communication only, such as the standard output from one process become the standard input of the other process.  
+
+
+<p align="center"> 
+	<img src="https://i.imgur.com/adcnQYi.png" width="600">
+</p>
