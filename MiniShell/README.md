@@ -184,3 +184,44 @@ Pipe() system call it is a file-like that lives in the memory not on the disk, a
 + **Returns :**
 	+ **`0`** on success;
 	+ **`-1`** on error.  
+
+On the next example we gonna send a message from the child process to the parent :   
+
+```C
+#include <unistd.h>
+#include <stdio.h>
+#include <stdlib.h>
+
+int main ()
+{
+	int fd[2];
+	int id;
+	char str[29];
+
+	if (pipe(fd) < 0)
+		exit(1);
+	id = fork();
+	if (!id)
+	{
+		close(fd[0]);
+		write(fd[1], "Sent from the Child process!", 29);
+		close(fd[1]);
+	}
+	else
+	{
+		close(fd[1]);
+		read(fd[0], &str, 29);
+		close(fd[0]);
+		write(1, str, 29);
+	}
+}
+
+```
+
+Calling `pipe()` before `fork()` is essential to communicate between the child and the parent process, that's ensure that both processes inherit the same pipe file descriptors `fd[0]` and `fd[1]`;  
+If you call `fork()` before the `pipe()` the child process won't know about the pipe the parent created.
+
+<p align="center"> 
+	<img src="https://i.imgur.com/RiVyW3D.png" width="400">
+</p>
+
