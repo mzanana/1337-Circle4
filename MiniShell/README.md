@@ -234,10 +234,28 @@ FIFO also known as **named pipe** is a special type of file used for interproces
 
 + **Named Pipes :** FIFOs are a powerful mechanism for inter-process communication, you can read and write from any open process as long as the system is up.  Called named because it has a name in the filesystem.
 
-The file of the named pipes (FIFOs) which allow the communication between two or more processes by reading and writing to the same file is created using the **`mkfifo();`** system call.  
-Once created, any process can open the named pipe for reading and writing
-
 <p align="center"> 
 	<img src="https://i.imgur.com/O1Lh0D1.png" width="400">
 </p>
+
+**Create a FIFO :**  
+The file of the named pipe (FIFO) which allow the communication between two or more processes by reading and writing to the same file is created using the **`mkfifo();`** system call.  
+Once created, any process can open the named pipe for reading and writing.  
+We need to include :  
+
+```C
+	#include <sys/stat.h>
+	#inlcude <sys/types.h>
+```
+
+So first we need to create the FIFO file :  `int mkfifo (const char *pathname, mode_t mode);`  
+
++ **pathname :** the name of the file or also with its path, for example `"newfile"` gonna create the file at my current directory, when using `"/tmp/newfile"` gonna create the file on the tmp path;  
++ **mode :** is the permissions of the file, represent who can access what in a file on  a UNIX system, 0777 to say this file is gonna be able to be read from or read to to **anybody** ;
+<p align="center"> 
+	<img src="https://i.imgur.com/CHZ5Iti.png" width="500">
+</p>
+
++ **`mkfifiReturns values :** `0` when success and `-1` if it fails.
+
 
