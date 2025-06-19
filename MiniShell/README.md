@@ -66,11 +66,11 @@ int main ()
         i = fork();
         if (!i)
         {
-                sleep(1);
-                printf("Child Process : Current ID : %d, Parent ID : %d", getpid(), getppid());
+	        sleep(1);
+	        printf("Child Process : Current ID : %d, Parent ID : %d", getpid(), getppid());
         }
         else
-                printf("Main Process : Current ID : %d, Parent ID : %d", getpid(), getppid());
+	        printf("Main Process : Current ID : %d, Parent ID : %d", getpid(), getppid());
         printf("\n");
         return 0;
 }
@@ -223,5 +223,21 @@ If you call `fork()` before the `pipe()` the child process won't know about the 
 
 <p align="center"> 
 	<img src="https://i.imgur.com/RiVyW3D.png" width="400">
+</p>
+
+## FIFOs
+
+FIFO also known as **named pipe** is a special type of file used for interprocess communication.   
+
+**What is the difference between the traditional pipes (unnamed), and the named pipes (FIFOs) ? And why they called like that ?**  
++ **Unnamed Pipes :** They are the traditional pipes which are temporary and exist only as long as the process that created them is running, they called unnamed because they not exist as a file in the filesystem. 
+
++ **Named Pipes :** FIFOs are a powerful mechanism for inter-process communication, you can read and write from any open process as long as the system is up.  Called named because it has a name in the filesystem.
+
+The file of the named pipes (FIFOs) which allow the communication between two or more processes by reading and writing to the same file is created using the **`mkfifo();`** system call.  
+Once created, any process can open the named pipe for reading and writing
+
+<p align="center"> 
+	<img src="https://i.imgur.com/O1Lh0D1.png" width="400">
 </p>
 
