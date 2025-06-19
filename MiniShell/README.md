@@ -176,3 +176,11 @@ Pipe() system call it is a file-like that lives in the memory not on the disk, a
 <p align="center"> 
 	<img src="https://i.imgur.com/adcnQYi.png" width="600">
 </p>
+
+**Syntax :**  
+`int pipe(int fds[2]);`. Parameters :  
++ **ft\[0] :** will be the file descriptor for the **read** end of pipe;  
++ **ft\[1] :** Will be the file descriptor for the **write** end of pipe;
++ **Returns :**
+	+ **`0`** on success;
+	+ **`-1`** on error.  
