@@ -259,3 +259,31 @@ So first we need to create the FIFO file :  `int mkfifo (const char *pathname, m
 + **`mkfifiReturns values :** `0` when success and `-1` if it fails.
 
 
+Let's create a FIFO file and write into it a message `"Am inside the fifo file!"` :  
+```C
+#inlcude <sys/stat.h>
+#include <sys/types.h>
+#include <fcntl.h>
+
+int main ()
+{
+	int fd;
+	char str[25] = "Am inside the fifo file!";
+	
+	if (mkfifo ("myfifofile", 0777) == -1)
+		return (1);
+	fd = open ("myfifofile", O_WRONLY );
+	if (write (fd, str, 25) == -1)
+		return (2);
+	close (fd);
+	return (0);
+}
+```
+
+If we execute this code you gonna notice that it will hang!  
+The problem is from the `open` system call, on the manual of `open`  :  
+<p align="center"> 
+	<img src="https://i.imgur.com/8AbcgQg.png" width="700">
+</p>
+So we need another process to open the same FIFO file for reading.  
+
