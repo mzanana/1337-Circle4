@@ -1,9 +1,13 @@
-#ifndef HEADER_H
-#define HEADER_H
+#ifndef LEXER_H
+#define LEXER_H
 
 # include <stdio.h>
 # include <stdlib.h>
+# include <readline/readline.h>
+# include <readline/history.h>
 # include <stdbool.h>
+# include <stddef.h>
+# include <unistd.h>
 
 typedef	enum e_token_type
 {
@@ -23,5 +27,12 @@ typedef struct s_token
 	bool			was_single_quoted;
 	struct s_token	*next;
 }	t_token;
+
+char    *ft_strndup(char *str, size_t n);
+int	is_operator(char c);
+int	is_space(char c);
+t_token	*token_new(char *value, t_token_type type, bool was_quoted, bool was_single_quoted);
+void	token_add_back(t_token **head, t_token *new);
+void	free_tokens(t_token **tokens);
 
 #endif
