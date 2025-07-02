@@ -291,6 +291,11 @@ So we need another process to open the same FIFO file for reading.
 
 **Shell** is program that provides a command-line interface between the user and the operating system (the kernel).  
 
+<p align="center">
+	<img src = "https://i.imgur.com/CIp3g2M.png" width= 500>
+</p>
+
+
 When we type a command :  
 + The shell accepts input from the user as the keyboard or script;
 + Interprets the inputs, parsing and evaluating it;  
