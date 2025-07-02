@@ -287,3 +287,16 @@ The problem is from the `open` system call, on the manual of `open`  :
 </p>
 So we need another process to open the same FIFO file for reading.  
 
+# Shell & Bash
+
+**Shell** is program that provides a command-line interface between the user and the operating system (the kernel).  
+
+When we type a command :  
++ The shell accepts input from the user as the keyboard or script;
++ Interprets the inputs, parsing and evaluating it;  
++ Tells to the kernel to perform tasks and then it returns the output to the user.  
+
+There are different types of shells :  
++ **Bourne shell (`sh`);**  
++ **Bourne Again Shell (`bash`);
++ **Z shell (`zsh`)
