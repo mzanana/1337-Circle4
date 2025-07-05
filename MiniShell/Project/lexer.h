@@ -35,4 +35,7 @@ t_token	*token_new(char *value, t_token_type type, bool was_quoted, bool was_sin
 void	token_add_back(t_token **head, t_token *new);
 void	free_tokens(t_token **tokens);
 
+bool    syntax_is_valid(t_token *tokens);
+bool    check_pipe_syntax(t_token *token);
+bool    check_redirection_syntax(t_token *tokens);
 #endif
