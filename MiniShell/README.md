@@ -3,6 +3,9 @@
 ---
  **Table of Contents :**  
 [Processes](#processes)   
+[Fork Function](#Fork-Function)  
+[Shell & Bash](#shell--bash)   
+
 
 ---
 # Processes
@@ -12,7 +15,7 @@ We will take a look how to work with multiple processes inside our C programs an
 **But first! What is a process ?**  
 A process is an instance of a computer program that is being executed, the program is a static set of instructions, while the process is a dynamic execution of those instructions.  
 
-## Fork Function 
+## <a name="Fork-Function">Fork Function</a> 
 
 `fork()` is a system call used for creating a new process in Linux systems which is called the **child process**, it returns :  
 + **Negative value** `-1` if the creation of a child process was failed;  
@@ -287,6 +290,7 @@ The problem is from the `open` system call, on the manual of `open`  :
 </p>
 So we need another process to open the same FIFO file for reading.  
 
+---
 # Shell & Bash
 
 **Shell** is program that provides a command-line interface between the user and the operating system (the kernel).  
