@@ -35,6 +35,56 @@ bool	handle_quoted_token(t_token **tokens, char *input, int *i)
 	(*i)++;
 	return (true);
 }
+
+bool	handle_operator_token(t_token **tokens, char *input, int *i)
+{
+	char	*value;
+	t_token_type	type;
+	t_token	*new_token;
+
+	if (input[*i] == '|')
+	{
+		type = T_PIPE;
+		value = ft_strndup("|", 1);
+		(*i)++;
+	}
+	else if (input[*i] == '<' && input[*i + 1] == '<')
+	{
+		type = T_HEREDOC;
+		value = ft_strndup("<<", 2);
+		(*i) += 2;
+	}
+	else if (input[*i] == '>' && input[*i + 1] == '>')
+	{
+		type = T_APPEND;
+		value = ft_strndup(">>", 2);
+		(*i) += 2;
+	}
+	else if (input[*i] == '<')
+	{
+		type = T_REDIR_IN;
+		value = ft_strndup("<", 1);
+		(*i)++;
+	}
+	else (input[*i] == '>')
+	{
+		type = T_REDIR_OUT;
+		value = ft_strndup(">", 1);
+		(*i)++;
+	}
+	if (!value)
+		return (false);
+	new_token = token_new(value, type, false, false);
+	if (!new_token)
+	{
+		free(value);
+		return (false);
+	}
+	token_add_back(tokens, new_token);
+	return (true);
+}
+
+
 t_token	*tokenize_input(char *input)
 {
 	t_token *tokens;
@@ -53,6 +103,15 @@ t_token	*tokenize_input(char *input)
 			if (!handle_quoted_token(&tokens, input, &i))
 			{
 				free_tokens(&tokens);
+				return (NULL);
+			}
+		}
+		else if (is_operator(input[i]))
+		{
+			if (!handle_operator_token(&tokens, input, &i))
+			{
+				free_tokens(&tokens);
+				write(2, "lexer error: invalid operator\n", 31);
 				return (NULL);
 			}
 		}
