@@ -15,7 +15,7 @@ We will take a look how to work with multiple processes inside our C programs an
 **But first! What is a process ?**  
 A process is an instance of a computer program that is being executed, the program is a static set of instructions, while the process is a dynamic execution of those instructions.  
 
-## <a name="Fork-Function">Fork Function</a> 
+## Fork Function 
 
 `fork()` is a system call used for creating a new process in Linux systems which is called the **child process**, it returns :  
 + **Negative value** `-1` if the creation of a child process was failed;  
