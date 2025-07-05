@@ -11,6 +11,10 @@
 	- [How Shell works](#how-shell-works)  
 	- [Quoting](#quoting)  
 	- [Comments](#comments)  
+	- [Shell Commands](#shell-commands)  
+		- [Reserved Words](#reserved-words)  
+		- [Simple Commands](#simple-commands)  
+		- [Pipelines](#pipelines)
 ---
 # Processes
 
@@ -351,6 +355,19 @@ The form `$'string'`  treated as a **special** kind of single quotes.  Inside th
 
 A word beginning with a `#` cause that word and all remaining characters on that line to be ignored, even if there is the pipes.  
 <p align="center">
-	<img src = "https://i.imgur.com/PymwtDk.png" width= 500>
+	<img src = "https://i.imgur.com/PymwtDk.png" width= 650>
 </p>
 
+## Shell Commands  
+
+A simple shell command consist of the **command** itself followed by **arguments** separated by spaces.  
+We can get also complex command that composed of simple commands.  
+
+### Reserved Words
+
+Words that have special meaning to the shell. They are used to begin and end the shell's compound commands.  
+**Examples :** if, then, elif, else, time, in, for,  while, done, etc.  
+
+### Simple Commands
+
+Sequence of words separated by blanks, terminated by one of the shell's control operators. The first word specifies a command to be executed, and the rest of the words are that command's arguments.  
