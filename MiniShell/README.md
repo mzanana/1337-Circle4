@@ -325,4 +325,12 @@ There are **three** ways of quoting mechanisms :
 
 + **Single quotes :** Enclosing characters in single quotes   `'` preserves the literal value of **each** character within the quotes, even the `$` sign. A single quote may not occur between single quotes even if you're typing the escape character before it;  
 
-+ **Double quotes :** Enclosing characters in double quotes `"` preserves the literal value of all characters within the quotes, except the `$`, `'`, `\` and when history expansion is enabled.  The `$` and `'` characters retain their special meaning withing the double quotes. The `\` retains its specific meaning only when followed by one of the following characters : `$`, `'`, `"`, `\` or newline.
++ **Double quotes :** Enclosing characters in double quotes `"` preserves the literal value of all characters within the quotes, except the `$`, `'`, `\`.  The `$` and `'` characters retain their special meaning withing the double quotes. The `\` retains its specific meaning only when followed by one of the following characters : `$`, `'`, `"`, `\` or newline. Not like the single quotes, the double quotes may be quoted by preceding it with a backslash.   
+
+#### **ANSI C-style :**  
+
+The form `$'string'`  treated as a **special** kind of single quotes.  Inside the `'string'` if the present of a backslash character it replaced by the ANSI-C standard using the C-style escape sequences like `\n`, `\t`, `\\`, etc.  This is different from the regular single quotes which treat everything literally.  
+
+**Example :**  
+`echo 'Hello\tWorld` => `Hello\nWorld`;  
+`echo $'Hello\tWorld` => `Hello     World`.  
