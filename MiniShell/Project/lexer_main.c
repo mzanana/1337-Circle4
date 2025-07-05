@@ -1,6 +1,4 @@
 #include"lexer.h"
-
-
 bool	handle_quoted_token(t_token **tokens, char *input, int *i)
 {
 	char quote_char;
@@ -150,8 +148,6 @@ t_token	*tokenize_input(char *input)
 	}
 	return (tokens);
 }
-
-
 int main()
 {
 	char *line;
@@ -168,6 +164,19 @@ int main()
 		if (*line)
 			add_history(line);
 		tokens = tokenize_input(line);
+		if (!tokens)
+		{
+			free(line);
+			continue ;
+		}
+		if (!syntax_is_valid(tokens))
+		{
+			free_tokens(&tokens);
+			free(line);
+			continue ;
+		}
+		free_tokens(&tokens);
+		free(line);
 	}
 	return (0);
 }
