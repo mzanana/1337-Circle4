@@ -36,6 +36,28 @@ bool	handle_quoted_token(t_token **tokens, char *input, int *i)
 	return (true);
 }
 
+bool	handle_word_token(t_token **tokens, char *input, int *i)
+{
+	int	start;
+	char	*value;
+	t_token	*new_token;
+
+	start = *i;
+	while (input[*i] && !is_space(input[*i]) && !is_operator(input[*i]) && input[*i] != '\'' && input[*i] != '"')
+		(*i)++;
+	value = ft_strndup(input + start, *i - start);
+	if (!value)
+		return (false);
+	new_token = token_new(value, T_WORD, false, false);
+	if (!new_token)
+	{
+		free(value);
+		return (false);
+	}
+	token_add_back(tokens, new_token);
+	return (true);
+}
+
 bool	handle_operator_token(t_token **tokens, char *input, int *i)
 {
 	char	*value;
@@ -112,6 +134,15 @@ t_token	*tokenize_input(char *input)
 			{
 				free_tokens(&tokens);
 				write(2, "lexer error: invalid operator\n", 31);
+				return (NULL);
+			}
+		}
+		else
+		{
+			if (!handle_word_token(&tokens, input, &i))
+			{
+				free_tokens(&tokens);
+				write (2, "lexer error: failed to allocate word\n", 37);
 				return (NULL);
 			}
 		}
