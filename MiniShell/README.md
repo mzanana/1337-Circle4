@@ -315,7 +315,7 @@ Those are the **steps** of Shell operation :
 + **Executes the command.**  
 
 
-### Quoting  
+## Quoting  
 
 On Shell there is some special characters or words which have a meaning not read as a simple text, sometimes we need to disable this option so we could use the special character as a normal text. **That's what the quoting used for**.  
 
@@ -332,5 +332,16 @@ There are **three** ways of quoting mechanisms :
 The form `$'string'`  treated as a **special** kind of single quotes.  Inside the `'string'` if the present of a backslash character it replaced by the ANSI-C standard using the C-style escape sequences like `\n`, `\t`, `\\`, etc.  This is different from the regular single quotes which treat everything literally.  
 
 **Example :**  
-`echo 'Hello\tWorld` => `Hello\nWorld`;  
+`echo 'Hello\tWorld` => `Hello\tWorld`;  
 `echo $'Hello\tWorld` => `Hello     World`.  
+
+<p align="center">
+	<img src = "https://i.imgur.com/Z7vQifL.png" width= 500>
+</p>
+## Comments 
+
+A word beginning with a `#` cause that word and all remaining characters on that line to be ignored, even if there is the pipes.  
+<p align="center">
+	<img src = "https://i.imgur.com/PymwtDk.png" width= 500>
+</p>
+
