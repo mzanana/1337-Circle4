@@ -2,11 +2,15 @@
 
 ---
  **Table of Contents :**  
-[Processes](#processes)   
-[Fork Function](#Fork-Function)  
-[Shell & Bash](#shell--bash)   
-
-
+1. [Processes](#processes)   
+	- [Fork Function](#Fork-Function)    
+	- [Process IDs](#processes-ids)  
+	- [Fork multiple times](#fork-multiple-times)  
+	- [Pipes](#pipes)  
+2. [Shell & Bash](#shell--bash)   
+	- [How Shell works](#how-shell-works)  
+	- [Quoting](#quoting)  
+	- [Comments](#comments)  
 ---
 # Processes
 
@@ -290,7 +294,7 @@ The problem is from the `open` system call, on the manual of `open`  :
 </p>
 So we need another process to open the same FIFO file for reading.  
 
----
+
 # Shell & Bash
 
 **Shell** is program that provides a command-line interface between the user and the operating system (the kernel).  
