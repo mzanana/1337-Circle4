@@ -313,3 +313,16 @@ Those are the **steps** of Shell operation :
 + Parses the tokens into simple and compound commands;   
 + Performs the expanded tokens into the lists of filenames and commands and arguments;  
 + **Executes the command.**  
+
+
+### Quoting  
+
+On Shell there is some special characters or words which have a meaning not read as a simple text, sometimes we need to disable this option so we could use the special character as a normal text. **That's what the quoting used for**.  
+
+There are **three** ways of quoting mechanisms :  
+
++ **Escape character :** A non-quoted backslash   `\`   is the Bash escape character. It preserves the literal value of the next character that follows;  
+
++ **Single quotes :** Enclosing characters in single quotes   `'` preserves the literal value of **each** character within the quotes, even the `$` sign. A single quote may not occur between single quotes even if you're typing the escape character before it;  
+
++ **Double quotes :** Enclosing characters in double quotes `"` preserves the literal value of all characters within the quotes, except the `$`, `'`, `\` and when history expansion is enabled.  The `$` and `'` characters retain their special meaning withing the double quotes. The `\` retains its specific meaning only when followed by one of the following characters : `$`, `'`, `"`, `\` or newline.
