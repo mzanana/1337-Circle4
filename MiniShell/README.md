@@ -299,3 +299,17 @@ There are different types of shells :
 + **Bourne shell (`sh`);**  
 + **Bourne Again Shell (`bash`);**  
 + **Z shell (`zsh`)**  
+
+## How Shell works
+
+In case facing the comment symbol (`#`) the shell ignore it with the rest of that line, otherwise the shell divide the input into **words** and **operators**.  
+The shell parse these tokens into commands, remove special meaning of certain words or characters, expand others, redirects input and output as needed, executes the specified command.   
+
+### Shell from terminal input into execution  
+
+Those are the **steps** of Shell operation :  
++ **Reads its input from the terminal;**  
++ Break the input into words and operators, obeying the quoting rules. These tokens are separated by `metacharacters`;  
++ Parses the tokens into simple and compound commands;   
++ Performs the expanded tokens into the lists of filenames and commands and arguments;  
++ **Executes the command.**  
