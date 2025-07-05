@@ -295,13 +295,7 @@ So we need another process to open the same FIFO file for reading.
 	<img src = "https://i.imgur.com/CIp3g2M.png" width= 500>
 </p>
 
-
-When we type a command :  
-+ The shell accepts input from the user as the keyboard or script;
-+ Interprets the inputs, parsing and evaluating it;  
-+ Tells to the kernel to perform tasks and then it returns the output to the user.  
-
 There are different types of shells :  
 + **Bourne shell (`sh`);**  
-+ **Bourne Again Shell (`bash`);
-+ **Z shell (`zsh`)
++ **Bourne Again Shell (`bash`);**  
++ **Z shell (`zsh`)**  
