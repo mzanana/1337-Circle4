@@ -14,7 +14,8 @@
 	- [Shell Commands](#shell-commands)  
 		- [Reserved Words](#reserved-words)  
 		- [Simple Commands](#simple-commands)  
-		- [Pipelines](#pipelines)
+		- [Pipelines](#pipelines)  
+	- [Shell Parameters](#shell-parameters)  
 ---
 # Processes
 
@@ -371,3 +372,23 @@ Words that have special meaning to the shell. They are used to begin and end the
 ### Simple Commands
 
 Sequence of words separated by blanks, terminated by one of the shell's control operators. The first word specifies a command to be executed, and the rest of the words are that command's arguments.  
+
+
+### Pipelines  
+
+A pipeline is a sequence of one or more commands separated by the `|` operator, where the standard output of one command becomes the standard input of the next command.  
+
+**Syntax :**  
+`command1 | command2 | command3 ...`   
+
+The shell create the **pipe** using the `pipe()` system call, then it forks child processes for each command.   
+Each command in a multi-command pipeline is executed in its own subshell.  
+
+## Shell Parameters
+
+Anything that hold a values in shell is a **parameter**. It can be a name, a number or one of the special characters. A **variable** is a parameter denoted by a name, it has a value and zero or more attributes.   
+A parameter is set if it has been assigned a value, the null string is a **valid** value.  
+
+A variable is assigned to using a statement of the form :  
+`name=[value]`  
+
