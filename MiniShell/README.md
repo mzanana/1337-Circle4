@@ -346,6 +346,7 @@ The form `$'string'`  treated as a **special** kind of single quotes.  Inside th
 <p align="center">
 	<img src = "https://i.imgur.com/Z7vQifL.png" width= 500>
 </p>
+
 ## Comments 
 
 A word beginning with a `#` cause that word and all remaining characters on that line to be ignored, even if there is the pipes.  
