@@ -2,8 +2,20 @@
 
 ---
  **Table of Contents :**  
-[Processes](#processes)   
-
+1. [Processes](#processes)   
+	- [Fork Function](#Fork-Function)    
+	- [Process IDs](#processes-ids)  
+	- [Fork multiple times](#fork-multiple-times)  
+	- [Pipes](#pipes)  
+2. [Shell & Bash](#shell--bash)   
+	- [How Shell works](#how-shell-works)  
+	- [Quoting](#quoting)  
+	- [Comments](#comments)  
+	- [Shell Commands](#shell-commands)  
+		- [Reserved Words](#reserved-words)  
+		- [Simple Commands](#simple-commands)  
+		- [Pipelines](#pipelines)  
+	- [Shell Parameters](#shell-parameters)  
 ---
 # Processes
 
@@ -286,4 +298,97 @@ The problem is from the `open` system call, on the manual of `open`  :
 	<img src="https://i.imgur.com/8AbcgQg.png" width="700">
 </p>
 So we need another process to open the same FIFO file for reading.  
+
+
+# Shell & Bash
+
+**Shell** is program that provides a command-line interface between the user and the operating system (the kernel).  
+
+<p align="center">
+	<img src = "https://i.imgur.com/CIp3g2M.png" width= 500>
+</p>
+
+There are different types of shells :  
++ **Bourne shell (`sh`);**  
++ **Bourne Again Shell (`bash`);**  
++ **Z shell (`zsh`)**  
+
+## How Shell works
+
+In case facing the comment symbol (`#`) the shell ignore it with the rest of that line, otherwise the shell divide the input into **words** and **operators**.  
+The shell parse these tokens into commands, remove special meaning of certain words or characters, expand others, redirects input and output as needed, executes the specified command.   
+
+### Shell from terminal input into execution  
+
+Those are the **steps** of Shell operation :  
++ **Reads its input from the terminal;**  
++ Break the input into words and operators, obeying the quoting rules. These tokens are separated by `metacharacters`;  
++ Parses the tokens into simple and compound commands;   
++ Performs the expanded tokens into the lists of filenames and commands and arguments;  
++ **Executes the command.**  
+
+
+## Quoting  
+
+On Shell there is some special characters or words which have a meaning not read as a simple text, sometimes we need to disable this option so we could use the special character as a normal text. **That's what the quoting used for**.  
+
+There are **three** ways of quoting mechanisms :  
+
++ **Escape character :** A non-quoted backslash   `\`   is the Bash escape character. It preserves the literal value of the next character that follows;  
+
++ **Single quotes :** Enclosing characters in single quotes   `'` preserves the literal value of **each** character within the quotes, even the `$` sign. A single quote may not occur between single quotes even if you're typing the escape character before it;  
+
++ **Double quotes :** Enclosing characters in double quotes `"` preserves the literal value of all characters within the quotes, except the `$`, `'`, `\`.  The `$` and `'` characters retain their special meaning withing the double quotes. The `\` retains its specific meaning only when followed by one of the following characters : `$`, `'`, `"`, `\` or newline. Not like the single quotes, the double quotes may be quoted by preceding it with a backslash.   
+
+#### **ANSI C-style :**  
+
+The form `$'string'`  treated as a **special** kind of single quotes.  Inside the `'string'` if the present of a backslash character it replaced by the ANSI-C standard using the C-style escape sequences like `\n`, `\t`, `\\`, etc.  This is different from the regular single quotes which treat everything literally.  
+
+**Example :**  
+`echo 'Hello\tWorld` => `Hello\tWorld`;  
+`echo $'Hello\tWorld` => `Hello     World`.  
+
+<p align="center">
+	<img src = "https://i.imgur.com/Z7vQifL.png" width= 500>
+</p>
+
+## Comments 
+
+A word beginning with a `#` cause that word and all remaining characters on that line to be ignored, even if there is the pipes.  
+<p align="center">
+	<img src = "https://i.imgur.com/PymwtDk.png" width= 650>
+</p>
+
+## Shell Commands  
+
+A simple shell command consist of the **command** itself followed by **arguments** separated by spaces.  
+We can get also complex command that composed of simple commands.  
+
+### Reserved Words
+
+Words that have special meaning to the shell. They are used to begin and end the shell's compound commands.  
+**Examples :** if, then, elif, else, time, in, for,  while, done, etc.  
+
+### Simple Commands
+
+Sequence of words separated by blanks, terminated by one of the shell's control operators. The first word specifies a command to be executed, and the rest of the words are that command's arguments.  
+
+
+### Pipelines  
+
+A pipeline is a sequence of one or more commands separated by the `|` operator, where the standard output of one command becomes the standard input of the next command.  
+
+**Syntax :**  
+`command1 | command2 | command3 ...`   
+
+The shell create the **pipe** using the `pipe()` system call, then it forks child processes for each command.   
+Each command in a multi-command pipeline is executed in its own subshell.  
+
+## Shell Parameters
+
+Anything that hold a values in shell is a **parameter**. It can be a name, a number or one of the special characters. A **variable** is a parameter denoted by a name, it has a value and zero or more attributes.   
+A parameter is set if it has been assigned a value, the null string is a **valid** value.  
+
+A variable is assigned to using a statement of the form :  
+`name=[value]`  
 
