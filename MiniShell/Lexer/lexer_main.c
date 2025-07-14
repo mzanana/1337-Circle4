@@ -1,59 +1,34 @@
-#include"lexer.h"
-bool	handle_quoted_token(t_token **tokens, char *input, int *i)
-{
-	char quote_char;
-	int start;
-	int len;
-	char *value;
-	t_token *new_token;
+#include "lexer.h"
 
-	quote_char = input[*i];
-	(*i)++;
-	start = *i;
-	while (input[*i] && input[*i] != quote_char)
-		(*i)++;
-	if (input[*i] != quote_char)
-	{
-		write(2, "bash: unexpected EOF while looking for matching `", 49);
-		write(2, &quote_char, 1);
-		write(2, "`\n", 2);
-		return (false);
-	}
-	len = (*i) - start;
-	value = ft_strndup(input + start, len);
-	if (!value)
-		return (false);
-	new_token = token_new(value, T_WORD, true, quote_char == '\'');
-	if (!new_token)
-	{
-		free(value);
-		return (false);
-	}
-	token_add_back(tokens, new_token);
-	(*i)++;
-	return (true);
+char    *ft_strndup(char *str, size_t n)
+{
+        size_t  i;
+        char    *dup;
+
+        i = 0;
+        while (str[i] && i < n)
+                i++;
+        dup = malloc(sizeof(char) * (i + 1));
+        if (!dup)
+                return (NULL);
+        i = 0;
+        while (str[i] && i < n)
+        {
+                dup[i] = str[i];
+                i++;
+        }
+        dup[i] = '\0';
+        return (dup);
 }
 
-bool	handle_word_token(t_token **tokens, char *input, int *i)
+int	is_operator(char c)
 {
-	int	start;
-	char	*value;
-	t_token	*new_token;
+	return (c == '|' || c == '<' || c == '>');
+}
 
-	start = *i;
-	while (input[*i] && !is_space(input[*i]) && !is_operator(input[*i]) && input[*i] != '\'' && input[*i] != '"')
-		(*i)++;
-	value = ft_strndup(input + start, *i - start);
-	if (!value)
-		return (false);
-	new_token = token_new(value, T_WORD, false, false);
-	if (!new_token)
-	{
-		free(value);
-		return (false);
-	}
-	token_add_back(tokens, new_token);
-	return (true);
+int	is_space(char c)
+{
+	return (c == ' ' || (c >= 9 && c <= 13));
 }
 
 bool	handle_operator_token(t_token **tokens, char *input, int *i)
@@ -62,6 +37,7 @@ bool	handle_operator_token(t_token **tokens, char *input, int *i)
 	t_token_type	type;
 	t_token	*new_token;
 
+	value = NULL;
 	if (input[*i] == '|')
 	{
 		type = T_PIPE;
@@ -86,7 +62,7 @@ bool	handle_operator_token(t_token **tokens, char *input, int *i)
 		value = ft_strndup("<", 1);
 		(*i)++;
 	}
-	else (input[*i] == '>')
+	else if (input[*i] == '>')
 	{
 		type = T_REDIR_OUT;
 		value = ft_strndup(">", 1);
@@ -104,13 +80,95 @@ bool	handle_operator_token(t_token **tokens, char *input, int *i)
 	return (true);
 }
 
+char	*append_char_to_buffer(char *buffer, char c)
+{
+	char	*new_buf;
+	size_t	len;
+	size_t	i;
+
+	if (!buffer)
+		len = 0;
+	else
+		len = ft_strlen(buffer);
+	new_buf = malloc(len + 2);
+	if (!new_buf)
+		return (NULL);
+	i = 0;
+	while (i < len)
+	{
+		new_buf[i] = buffer[i];
+		i++;
+	}
+	new_buf[i++] = c;
+	new_buf[i] = '\0';
+	free(buffer);
+	return (new_buf);
+}
+
+bool	append_quoted_segment(char **buffer, char *input, int *i)
+{
+	char	quote = input[*i];
+	*buffer = append_char_to_buffer(*buffer, quote);
+	(*i)++;
+	while (input[*i])
+	{
+		*buffer = append_char_to_buffer(*buffer, input[*i]);
+		if (!(*buffer))
+			return (false);
+		if (input[*i] == quote)
+		{
+			(*i)++;
+			return (true);
+		}
+		(*i)++;
+	}
+	write(2, "bash: unexpected EOF while looking for matching `", 49);
+	write(2, &quote, 1);
+	write(2, "'\n", 2);
+	return (false);
+}
+
+bool	collect_word_token(t_token **tokens, char *input, int *i)
+{
+	char	*buffer;
+	t_token	*new_token;
+
+	buffer = NULL;
+	while (input[*i])
+	{
+		if (is_space(input[*i]) || is_operator(input[*i]))
+			break ;
+		if (input[*i] == '\'' || input[*i] == '"')
+		{
+			if (!append_quoted_segment(&buffer, input, i))
+			{
+				free(buffer);
+				return (false);
+			}
+		}
+		else
+		{
+			buffer = append_char_to_buffer(buffer, input[*i]);
+			if (!buffer)
+				return (false);
+			(*i)++;
+		}
+	}
+	new_token = token_new(buffer, T_WORD, false, false);
+	if (!new_token)
+	{
+		free(buffer);
+		return (false);
+	}
+	token_add_back(tokens, new_token);
+	return (true);
+}
 
 t_token	*tokenize_input(char *input)
 {
-	t_token *tokens;
+	t_token	*tokens = NULL;
 	int		i;
 
-	tokens = NULL;
 	i = 0;
 	while (input[i])
 	{
@@ -118,40 +176,67 @@ t_token	*tokenize_input(char *input)
 			i++;
 		if (!input[i])
 			break ;
-		if (input[i] == '"' || input[i] == '\'')
-		{
-			if (!handle_quoted_token(&tokens, input, &i))
-			{
-				free_tokens(&tokens);
-				return (NULL);
-			}
-		}
-		else if (is_operator(input[i]))
+		if (is_operator(input[i]))
 		{
 			if (!handle_operator_token(&tokens, input, &i))
 			{
 				free_tokens(&tokens);
-				write(2, "lexer error: invalid operator\n", 31);
+				//write(2, "lexer error: invalid operator\n", 31);
 				return (NULL);
 			}
 		}
 		else
 		{
-			if (!handle_word_token(&tokens, input, &i))
+			if (!collect_word_token(&tokens, input, &i))
 			{
 				free_tokens(&tokens);
-				write (2, "lexer error: failed to allocate word\n", 37);
+				//write(2, "lexer error: failed to collect word\n", 37);
 				return (NULL);
 			}
 		}
-		i++;
 	}
 	return (tokens);
 }
-int main()
+
+
+const char	*token_type_to_str(t_token_type type)
 {
-	char *line;
-	t_token *tokens;
+	if (type == T_WORD)
+		return ("T_WORD");
+	else if (type == T_PIPE)
+		return ("T_PIPE");
+	else if (type == T_REDIR_IN)
+		return ("T_REDIR_IN");
+	else if (type == T_REDIR_OUT)
+		return ("T_REDIR_OUT");
+	else if (type == T_APPEND)
+		return ("T_APPEND");
+	else if (type == T_HEREDOC)
+		return ("T_HEREDOC");
+	else
+		return ("T_UNKNOWN");
+}
+
+void	print_tokens(t_token *tokens)
+{
+	int		i = 0;
+
+	while (tokens)
+	{
+		printf("Token[%d]: %-13s | Type: %-13s | Quoted: %-3s | Single: %-3s\n",
+			i++,
+			tokens->value,
+			token_type_to_str(tokens->type),
+			tokens->was_quoted ? "yes" : "no",
+			tokens->was_single_quoted ? "yes" : "no");
+		tokens = tokens->next;
+	}
+}
+
+int	main()
+{
+	char	*line;
+	t_token	*tokens;
 
 	while (1)
 	{
@@ -175,6 +260,7 @@ int main()
 			free(line);
 			continue ;
 		}
+		print_tokens(tokens);
 		free_tokens(&tokens);
 		free(line);
 	}
