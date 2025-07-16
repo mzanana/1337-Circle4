@@ -1,36 +1,5 @@
 #include "lexer.h"
 
-char    *ft_strndup(char *str, size_t n)
-{
-        size_t  i;
-        char    *dup;
-
-        i = 0;
-        while (str[i] && i < n)
-                i++;
-        dup = malloc(sizeof(char) * (i + 1));
-        if (!dup)
-                return (NULL);
-        i = 0;
-        while (str[i] && i < n)
-        {
-                dup[i] = str[i];
-                i++;
-        }
-        dup[i] = '\0';
-        return (dup);
-}
-
-int	is_operator(char c)
-{
-	return (c == '|' || c == '<' || c == '>');
-}
-
-int	is_space(char c)
-{
-	return (c == ' ' || (c >= 9 && c <= 13));
-}
-
 bool	handle_operator_token(t_token **tokens, char *input, int *i)
 {
 	char	*value;
@@ -211,10 +180,8 @@ const char	*token_type_to_str(t_token_type type)
 		return ("T_REDIR_OUT");
 	else if (type == T_APPEND)
 		return ("T_APPEND");
-	else if (type == T_HEREDOC)
-		return ("T_HEREDOC");
 	else
-		return ("T_UNKNOWN");
+		return ("T_HEREDOC");
 }
 
 void	print_tokens(t_token *tokens)
@@ -223,12 +190,10 @@ void	print_tokens(t_token *tokens)
 
 	while (tokens)
 	{
-		printf("Token[%d]: %-13s | Type: %-13s | Quoted: %-3s | Single: %-3s\n",
+		printf("Token[%d]: %-13s | Type: %-13s \n",
 			i++,
 			tokens->value,
-			token_type_to_str(tokens->type),
-			tokens->was_quoted ? "yes" : "no",
-			tokens->was_single_quoted ? "yes" : "no");
+			token_type_to_str(tokens->type));
 		tokens = tokens->next;
 	}
 }

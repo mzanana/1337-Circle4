@@ -8,6 +8,7 @@
 # include <stdbool.h>
 # include <stddef.h>
 # include <unistd.h>
+# include "../Libft/libft.h"
 
 typedef	enum e_token_type
 {
