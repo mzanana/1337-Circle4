@@ -180,10 +180,8 @@ const char	*token_type_to_str(t_token_type type)
 		return ("T_REDIR_OUT");
 	else if (type == T_APPEND)
 		return ("T_APPEND");
-	else if (type == T_HEREDOC)
-		return ("T_HEREDOC");
 	else
-		return ("T_UNKNOWN");
+		return ("T_HEREDOC");
 }
 
 void	print_tokens(t_token *tokens)
@@ -192,12 +190,10 @@ void	print_tokens(t_token *tokens)
 
 	while (tokens)
 	{
-		printf("Token[%d]: %-13s | Type: %-13s | Quoted: %-3s | Single: %-3s\n",
+		printf("Token[%d]: %-13s | Type: %-13s \n",
 			i++,
 			tokens->value,
-			token_type_to_str(tokens->type),
-			tokens->was_quoted ? "yes" : "no",
-			tokens->was_single_quoted ? "yes" : "no");
+			token_type_to_str(tokens->type));
 		tokens = tokens->next;
 	}
 }
