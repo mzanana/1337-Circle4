@@ -1,36 +1,5 @@
 #include "lexer.h"
 
-char    *ft_strndup(char *str, size_t n)
-{
-        size_t  i;
-        char    *dup;
-
-        i = 0;
-        while (str[i] && i < n)
-                i++;
-        dup = malloc(sizeof(char) * (i + 1));
-        if (!dup)
-                return (NULL);
-        i = 0;
-        while (str[i] && i < n)
-        {
-                dup[i] = str[i];
-                i++;
-        }
-        dup[i] = '\0';
-        return (dup);
-}
-
-int	is_operator(char c)
-{
-	return (c == '|' || c == '<' || c == '>');
-}
-
-int	is_space(char c)
-{
-	return (c == ' ' || (c >= 9 && c <= 13));
-}
-
 bool	handle_operator_token(t_token **tokens, char *input, int *i)
 {
 	char	*value;
