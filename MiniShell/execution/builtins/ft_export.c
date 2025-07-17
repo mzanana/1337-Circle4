@@ -10,6 +10,11 @@ int	ft_strcmp(char *s1, char *s2)
 	return (s1[i] - s2[i]);
 }
 
+int	_is_var_char(int c)
+{
+	return (ft_isalnum(c) || c == '_');
+}
+
 void	env_add_back(t_env **env, t_env *new)
 {
 	t_env	*tmp;
@@ -61,6 +66,25 @@ t_env	*find_new(t_env *env, char *key)
 	return (NULL);
 }
 
+int	check_valide_key(char *arg, char *equale_signe)
+{
+	if (!equale_signe)
+	{
+		write(2, "bash: export: invalid argument\n", 32);
+		return (1);
+	}
+	while (arg != equale_signe)
+	{
+		if (!_is_var_char(*arg))
+		{
+			write(2, "bash: export: invalid argument\n", 32);
+			return (1);
+		}
+		arg++;
+	}
+	return (0);
+}
+
 int	update_or_add_env(char *arg, t_env **env)
 {
 	char	*equal_sign;
@@ -70,11 +94,8 @@ int	update_or_add_env(char *arg, t_env **env)
 	size_t	key_len;
 
 	equal_sign = ft_strchr(arg, '=');
-	if (!equal_sign)
-	{
-		write(2, "bash: export: invalid argument\n", 32);
+	if (check_valide_key(arg, equal_sign))
 		return (1);
-	}
 	key_len = equal_sign - arg;
 	key = ft_substr(arg, 0, key_len);
 	if (!key)
@@ -97,6 +118,7 @@ int	update_or_add_env(char *arg, t_env **env)
 	return (0);
 }
 
+// i still need to print the env in the right order !!!!!
 int	ft_export(char **argv, t_env **env)
 {
 	int	i;
@@ -115,20 +137,19 @@ int	ft_export(char **argv, t_env **env)
 	}
 	return (0);
 }
-/*
-int	main(int ac, char **av, char **envp)
+
+/*int	main(int ac, char **av, char **envp)
 {
 	(void)ac;
-	int	status;
 
-	t_env	*env = init_env_test_vim(envp);
-	status = ft_export(av, &env);
-	if (status == 0)
+	t_env	*env = init_env_list(envp);
+	ft_export(av, &env);
+	//if (status == 0)
 	{
 		while (env)
 		{
 			printf("%s=%s\n", env->key, env->value);
 			env = env->next;
 		}
-	}
+	}//
 }*/
