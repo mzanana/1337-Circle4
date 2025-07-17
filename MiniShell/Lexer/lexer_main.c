@@ -41,10 +41,7 @@ bool	handle_operator_token(t_token **tokens, char *input, int *i)
 		return (false);
 	new_token = token_new(value, type, false, false);
 	if (!new_token)
-	{
-		free(value);
 		return (false);
-	}
 	token_add_back(tokens, new_token);
 	return (true);
 }
@@ -59,7 +56,7 @@ char	*append_char_to_buffer(char *buffer, char c)
 		len = 0;
 	else
 		len = ft_strlen(buffer);
-	new_buf = malloc(len + 2);
+	new_buf = gc_calloc(len + 2);
 	if (!new_buf)
 		return (NULL);
 	i = 0;
@@ -70,7 +67,6 @@ char	*append_char_to_buffer(char *buffer, char c)
 	}
 	new_buf[i++] = c;
 	new_buf[i] = '\0';
-	free(buffer);
 	return (new_buf);
 }
 
@@ -110,10 +106,7 @@ bool	collect_word_token(t_token **tokens, char *input, int *i)
 		if (input[*i] == '\'' || input[*i] == '"')
 		{
 			if (!append_quoted_segment(&buffer, input, i))
-			{
-				free(buffer);
 				return (false);
-			}
 		}
 		else
 		{
@@ -125,10 +118,7 @@ bool	collect_word_token(t_token **tokens, char *input, int *i)
 	}
 	new_token = token_new(buffer, T_WORD, false, false);
 	if (!new_token)
-	{
-		free(buffer);
 		return (false);
-	}
 	token_add_back(tokens, new_token);
 	return (true);
 }
@@ -149,8 +139,7 @@ t_token	*tokenize_input(char *input)
 		{
 			if (!handle_operator_token(&tokens, input, &i))
 			{
-				free_tokens(&tokens);
-				//write(2, "lexer error: invalid operator\n", 31);
+				write(2, "lexer error: invalid operator\n", 31);
 				return (NULL);
 			}
 		}
@@ -158,8 +147,7 @@ t_token	*tokenize_input(char *input)
 		{
 			if (!collect_word_token(&tokens, input, &i))
 			{
-				free_tokens(&tokens);
-				//write(2, "lexer error: failed to collect word\n", 37);
+				write(2, "lexer error: failed to collect word\n", 37);
 				return (NULL);
 			}
 		}
@@ -214,20 +202,24 @@ int	main()
 		if (*line)
 			add_history(line);
 		tokens = tokenize_input(line);
+		
 		if (!tokens)
 		{
 			free(line);
+			gc_calloc(-1);
 			continue ;
 		}
 		if (!syntax_is_valid(tokens))
 		{
-			free_tokens(&tokens);
 			free(line);
+			gc_calloc(-1);
 			continue ;
 		}
 		print_tokens(tokens);
-		free_tokens(&tokens);
+		gc_calloc(-1);
 		free(line);
+		
 	}
+
 	return (0);
 }
