@@ -7,7 +7,7 @@
 # include <fcntl.h>
 # include <sys/wait.h>
 # include <readline/readline.h>
-# include "../libft/libft.h"
+# include "../Libft/libft.h"
 
 typedef enum s_redir_type
 {
