@@ -8,7 +8,7 @@ char    *ft_strndup(char *str, size_t n)
         i = 0;
         while (str[i] && i < n)
                 i++;
-        dup = malloc(sizeof(char) * (i + 1));
+        dup = gc_calloc(sizeof(char) * (i + 1));
         if (!dup)
                 return (NULL);
         i = 0;
@@ -35,7 +35,7 @@ t_token	*token_new(char *value, t_token_type type, bool was_quoted, bool was_sin
 {
 	t_token	*token;
 
-	token = malloc(sizeof(t_token));
+	token = gc_calloc(sizeof(t_token));
 	if (!token)
 		return (NULL);
 	token->value = value;
@@ -74,7 +74,7 @@ void	free_tokens(t_token **tokens)
 	while (curr)
 	{
 		next = curr->next;
-		free(curr->value);
+		// free(curr->value);
 		free(curr);
 		curr = next;
 	}
