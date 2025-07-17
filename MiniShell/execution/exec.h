@@ -54,4 +54,13 @@ int	ft_strcmp(char *s1, char *s2);
 
 
 int	handle_redirections(t_redir *redir);
+char	*find_cmd_path(char *cmd, t_env *env);
+
+int	is_builtin(char *cmd);
+int	run_builtin(t_cmd *cmd, t_env **env);
+int	is_single_builtin(t_cmd *cmd);
+void	free_env_list(t_env *env);//temporary
+
+
+int	ft_cd(char **argv);
 #endif
