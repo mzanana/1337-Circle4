@@ -9,7 +9,7 @@ static void	status_main(int action, int *value)
 
 	if (action == GET)
 		*value = last_status;
-	else if (action = SET)
+	else if (action == SET)
 		last_status = *value;
 }
 
@@ -21,7 +21,7 @@ int	status_get(void)
 	return (value);
 }
 
-int	status_set(int value)
+void	status_set(int value)
 {
 	status_main(SET, &value);
 }
