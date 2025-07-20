@@ -39,7 +39,7 @@ void	pipe_child(t_cmd *cmd, int in_fd, int pipefd[2], t_env **env)
 	}
 	if (cmd->next)
 	{
-		close(pipefd[0]); // wedon't read in child
+		close(pipefd[0]); // we don't read in child
 		dup2(pipefd[1], STDOUT_FILENO);
 		close(pipefd[1]);
 	}
@@ -99,9 +99,23 @@ int	execute_pipeline(t_cmd *cmds, t_env **env)
 
 int	run_command(t_cmd *cmds, t_env **env)
 {
+	int	saved_stdin;
+	int	saved_stdout;
+
 	if (is_single_builtin(cmds))
 	{
+		saved_stdin = dup(STDIN_FILENO);
+		saved_stdout = dup(STDOUT_FILENO);
+		if (handle_redirections(cmds->redir))
+		{
+			status_set(1);
+			return (1);
+		}
 		status_set(run_builtin(cmds, env));
+		dup2(saved_stdin, STDIN_FILENO);
+		dup2(saved_stdout, STDOUT_FILENO);
+		close(saved_stdin);
+		close(saved_stdout);
 		return (status_get());
 	}
 	else
@@ -117,26 +131,25 @@ int	run_command(t_cmd *cmds, t_env **env)
 	//t_cmd	*cmd2 = malloc(sizeof(t_cmd));
 	//t_cmd	*cmd3 = malloc(sizeof(t_cmd));
 
-	//t_redir	*redir = malloc(sizeof(t_redir));
+	t_redir	*redir = malloc(sizeof(t_redir));
 
-	cmd1->argv = ft_split("export &&=lal", ' ');
-	cmd1->redir = NULL;
+	cmd1->argv = ft_split("echo hello", ' ');
+	cmd1->redir = redir;
 	cmd1->next = NULL;
 
-	cmd2->argv = ft_split("echo hello world", ' ');
-	cmd2->redir = redir;
-	cmd2->next = NULL;
+	//cmd2->argv = ft_split("echo hello world", ' ');
+	//cmd2->redir = redir;
+	//cmd2->next = NULL;
 
 	redir->type = R_OUTPUT;
 	redir->filename = ft_strdup("testing");
 	redir->next = NULL;
 
-	cmd3->argv = ft_split("wc -l", ' ');
-	cmd3->redir = NULL;
-	cmd3->next = NULL;
+	//cmd3->argv = ft_split("wc -l", ' ');
+	//cmd3->redir = NULL;
+	//cmd3->next = NULL;
 
-	int	last_status = 1;
-	run_command(cmd1, &env, &last_status);
+	run_command(cmd1, &env);
 	free_env_list(env);
 	return (0);
 }*/
