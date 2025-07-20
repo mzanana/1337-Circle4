@@ -20,7 +20,7 @@ int	ft_cd(char **argv)
 	return (0);
 }
 
-void	print_curr_dir(void)
+/*void	print_curr_dir(void)
 {
 	char	*cwd = getcwd(NULL, 0);
 
@@ -47,4 +47,4 @@ int main(void)
 	ft_cd(cmd4);
 	print_curr_dir();
 
-}
+}*/
