@@ -63,4 +63,11 @@ void	free_env_list(t_env *env);//temporary
 
 
 int	ft_cd(char **argv);
+
+int	status_get(void);
+void	status_set(int value);
+
+int	run_command(t_cmd *cmds, t_env **env);
+t_redir	*new_redir(t_redir_type type, char *filename);
+void	free_env_list(t_env *env);
 #endif

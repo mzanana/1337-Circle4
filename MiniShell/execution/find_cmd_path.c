@@ -98,7 +98,7 @@ char	*find_cmd_path(char *cmd, t_env *env)
 	return (NULL);
 }
 
-int	main(int ac, char **av, char **envp)
+/*int	main(int ac, char **av, char **envp)
 {
 	(void)ac;
 	char	*path;
@@ -113,4 +113,4 @@ int	main(int ac, char **av, char **envp)
 	else
 		printf("Command not found\n");
 	return (0);
-}
+}*/

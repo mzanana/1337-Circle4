@@ -27,8 +27,11 @@ pid_t	fork_and_check(void)
 	return (pid);
 }
 
-void	pipe_child(t_cmd *cmd, int in_fd, int pipefd[2])
+void	pipe_child(t_cmd *cmd, int in_fd, int pipefd[2], t_env **env)
 {
+	int	exit_code;
+	char	*path;
+
 	if (in_fd != 0)
 	{
 		dup2(in_fd, STDIN_FILENO);
@@ -40,13 +43,26 @@ void	pipe_child(t_cmd *cmd, int in_fd, int pipefd[2])
 		dup2(pipefd[1], STDOUT_FILENO);
 		close(pipefd[1]);
 	}
-	handle_redirections(cmd->redir);
-	execve(cmd->argv[0], cmd->argv, NULL);
+	if (handle_redirections(cmd->redir))
+		exit(1);
+	if (is_builtin(cmd->argv[0]))
+	{
+		exit_code = run_builtin(cmd, env);
+		exit(exit_code);
+	}
+	path = find_cmd_path(cmd->argv[0], *env);
+	if (!path)
+	{
+		write(2, "Command not found\n", 19);
+		exit(127);
+	}
+	execve(path, cmd->argv, NULL);
 	perror("execve");
+	free(path);
 	exit(1);
 }
 
-int	execute_pipeline(t_cmd *cmds)
+int	execute_pipeline(t_cmd *cmds, t_env **env)
 {
 	int	in_fd;
 	int	fd[2];
@@ -59,7 +75,7 @@ int	execute_pipeline(t_cmd *cmds)
 		create_pipe_if_needed(cmds, fd);
 		pid = fork_and_check();
 		if (pid == 0)
-			pipe_child(cmds, in_fd, fd);
+			pipe_child(cmds, in_fd, fd, env);
 		else
 		{
 			if (in_fd != 0)
@@ -75,29 +91,52 @@ int	execute_pipeline(t_cmd *cmds)
 	while (waitpid(-1, &status, 0) > 0)
 		;
 	if (WIFEXITED(status))
-		return WEXITSTATUS(status);
-	return (1);
+		status_set(WEXITSTATUS(status));
+	else
+		status_set(1);
+	return (status_get());
 }
 
-int	main(void)
+int	run_command(t_cmd *cmds, t_env **env)
 {
+	if (is_single_builtin(cmds))
+	{
+		status_set(run_builtin(cmds, env));
+		return (status_get());
+	}
+	else
+		return (execute_pipeline(cmds, env));
+}
+
+/*int	main(int ac, char **av, char **envp)
+{
+	(void)ac;
+	(void)av;
+	t_env	*env = init_env_list(envp);
 	t_cmd	*cmd1 = malloc(sizeof(t_cmd));
-	t_cmd	*cmd2 = malloc(sizeof(t_cmd));
-	t_cmd	*cmd3 = malloc(sizeof(t_cmd));
+	//t_cmd	*cmd2 = malloc(sizeof(t_cmd));
+	//t_cmd	*cmd3 = malloc(sizeof(t_cmd));
 
-	cmd1->argv = ft_split("/bin/yes", ' ');
+	//t_redir	*redir = malloc(sizeof(t_redir));
+
+	cmd1->argv = ft_split("export &&=lal", ' ');
 	cmd1->redir = NULL;
-	cmd1->next = cmd2;
+	cmd1->next = NULL;
 
-	cmd2->argv = ft_split("/usr/bin/head -c 1M", ' ');
-	cmd2->redir = NULL;
-	cmd2->next = cmd3;
+	cmd2->argv = ft_split("echo hello world", ' ');
+	cmd2->redir = redir;
+	cmd2->next = NULL;
 
-	cmd3->argv = ft_split("/usr/bin/wc -l", ' ');
+	redir->type = R_OUTPUT;
+	redir->filename = ft_strdup("testing");
+	redir->next = NULL;
+
+	cmd3->argv = ft_split("wc -l", ' ');
 	cmd3->redir = NULL;
 	cmd3->next = NULL;
 
-	int	exit_code = execute_pipeline(cmd1);
-	printf("Exit code: %d\n", exit_code);
-	return (exit_code);
-}
+	int	last_status = 1;
+	run_command(cmd1, &env, &last_status);
+	free_env_list(env);
+	return (0);
+}*/

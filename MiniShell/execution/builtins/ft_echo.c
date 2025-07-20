@@ -37,10 +37,10 @@ int	ft_echo(char **argv)
 	}
 	if (newline)
 		printf("\n");
-	return (1);
+	return (0);
 }
 
-int	main()
+/*int	main()
 {
 	t_cmd	*cmd = malloc(sizeof(t_cmd));
 
@@ -48,4 +48,4 @@ int	main()
 	cmd->redir = NULL;
 	cmd->next = NULL;
 	ft_echo(cmd->argv);
-}
+}*/

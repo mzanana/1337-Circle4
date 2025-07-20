@@ -45,7 +45,7 @@ int	ft_unset(char **argv, t_env **env)
 	return (0);
 }
 
-int	main(int ac, char **av, char **envp)
+/*int	main(int ac, char **av, char **envp)
 {
 	(void)ac;
 
@@ -56,4 +56,4 @@ int	main(int ac, char **av, char **envp)
 		printf("%s=%s\n", env->key, env->value);
 		env = env->next;
 	}
-}
+}*/
