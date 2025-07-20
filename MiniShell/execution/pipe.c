@@ -62,7 +62,7 @@ void	pipe_child(t_cmd *cmd, int in_fd, int pipefd[2], t_env **env)
 	exit(1);
 }
 
-int	execute_pipeline(t_cmd *cmds, t_env **env, int	*last_status)
+int	execute_pipeline(t_cmd *cmds, t_env **env)
 {
 	int	in_fd;
 	int	fd[2];
@@ -91,22 +91,24 @@ int	execute_pipeline(t_cmd *cmds, t_env **env, int	*last_status)
 	while (waitpid(-1, &status, 0) > 0)
 		;
 	if (WIFEXITED(status))
-		return WEXITSTATUS(status);
-	return (1);
+		status_set(WEXITSTATUS(status));
+	else
+		status_set(1);
+	return (status_get());
 }
 
-int	run_command(t_cmd *cmds, t_env **env, int *last_status)
+int	run_command(t_cmd *cmds, t_env **env)
 {
 	if (is_single_builtin(cmds))
 	{
-		*last_status = run_builtin(cmds, env);
-		return (*last_status);
+		status_set(run_builtin(cmds, env));
+		return (status_get());
 	}
 	else
-		return (execute_pipeline(cmds, env, last_status));
+		return (execute_pipeline(cmds, env));
 }
 
-int	main(int ac, char **av, char **envp)
+/*int	main(int ac, char **av, char **envp)
 {
 	(void)ac;
 	(void)av;
@@ -121,20 +123,20 @@ int	main(int ac, char **av, char **envp)
 	cmd1->redir = NULL;
 	cmd1->next = NULL;
 
-	/*cmd2->argv = ft_split("echo hello world", ' ');
+	cmd2->argv = ft_split("echo hello world", ' ');
 	cmd2->redir = redir;
 	cmd2->next = NULL;
 
 	redir->type = R_OUTPUT;
 	redir->filename = ft_strdup("testing");
-	redir->next = NULL;*/
+	redir->next = NULL;
 
-	/*cmd3->argv = ft_split("wc -l", ' ');
+	cmd3->argv = ft_split("wc -l", ' ');
 	cmd3->redir = NULL;
-	cmd3->next = NULL;*/
+	cmd3->next = NULL;
 
 	int	last_status = 1;
 	run_command(cmd1, &env, &last_status);
 	free_env_list(env);
 	return (0);
-}
+}*/
