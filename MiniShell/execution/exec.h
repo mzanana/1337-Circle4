@@ -63,4 +63,7 @@ void	free_env_list(t_env *env);//temporary
 
 
 int	ft_cd(char **argv);
+
+void	status_get(void);
+int	status_set(int value);
 #endif
