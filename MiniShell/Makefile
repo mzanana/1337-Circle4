@@ -6,7 +6,7 @@ SRC_FILES= $(wildcard ./execution/*.c ./execution/builtins/*.c)
 SRC_OBJ= $(SRC_FILES:%.c=%.o)
 
 
-LIBFT_DIR = libft
+LIBFT_DIR = Libft
 LIBFT = $(LIBFT_DIR)/libft.a
 NAME=minishell
 
