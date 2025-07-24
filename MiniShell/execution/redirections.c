@@ -31,7 +31,7 @@ int	handle_redirections(t_redir *redir)
 
 	while (redir)
 	{
-		if (redir->type == R_HEREDOC)
+		if (redir->type == R_HERDOC)//heredoc
 		{
 			fd = handle_heredoc(redir->filename);
 			if (fd == -1)

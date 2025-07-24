@@ -1,8 +1,8 @@
 CC = cc
-CFLAGS =   -ggdb3 -g3 -fsanitize=address
-LINKERS = -lft -lreadline -fsanitize=address
+CFLAGS =   -ggdb3 -g3
+LINKERS = -lft -lreadline
 
-SRC_FILES= $(wildcard ./execution/*.c ./execution/builtins/*.c)
+SRC_FILES= $(wildcard main.c ./execution/*.c ./execution/builtins/*.c ./lexer/*.c ./lexer/ast_print/*.c)
 SRC_OBJ= $(SRC_FILES:%.c=%.o)
 
 
