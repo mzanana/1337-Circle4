@@ -100,7 +100,7 @@ void free_cmds(t_cmd *cmd)
     }
 }
 
-int main(int ac, char **av, char **envp)
+int _main(int ac, char **av, char **envp)
 {
     (void)ac;
     (void)av;
