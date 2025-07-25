@@ -17,6 +17,10 @@
 		- [Pipelines](#pipelines)  
 	- [Shell Parameters](#shell-parameters)  
 ---
+
+---
+<details>
+<summary>Processes</summary>
 # Processes
 
 We will take a look how to work with multiple processes inside our C programs and how to communicate between them.  
@@ -299,6 +303,9 @@ The problem is from the `open` system call, on the manual of `open`  :
 </p>
 So we need another process to open the same FIFO file for reading.  
 
+</details>
+
+---
 
 # Shell & Bash
 
