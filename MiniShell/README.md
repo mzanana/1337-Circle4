@@ -48,12 +48,6 @@ int main ()
 }
 ```
 
-</details>
----
-
-
-
-
 If we use the `fork()` function on a normal code like printing `After calling the function fork()` we'll notice that the message printed twice, why ?  
 
 <p align="center"> 
@@ -323,6 +317,12 @@ There are different types of shells :
 + **Bourne shell (`sh`);**  
 + **Bourne Again Shell (`bash`);**  
 + **Z shell (`zsh`)**  
+
+</details>
+---
+
+
+
 
 ## How Shell works
 
