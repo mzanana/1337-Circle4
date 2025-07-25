@@ -35,11 +35,6 @@ A process is an instance of a computer program that is being executed, the progr
 + **Zero** returned to the new child process which created;  
 + **Positive value** returned to the parent or caller.
 
-</details>
----
-
-
-
 
 ```C
 #include<stdio.h>
@@ -52,6 +47,12 @@ int main ()
 	printf("After calling the function fork()\n");
 }
 ```
+
+</details>
+---
+
+
+
 
 If we use the `fork()` function on a normal code like printing `After calling the function fork()` we'll notice that the message printed twice, why ?  
 
