@@ -1,4 +1,4 @@
-#include "Lexer/lexer.h"
+#include "Parsing/Lexer/lexer.h"
 
 typedef struct s_gc
 {
