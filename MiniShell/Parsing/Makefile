@@ -1,12 +1,12 @@
 CC = cc
-CFLAGS =   -ggdb3 -g3
-LINKERS = -lft -lreadline
+#CFLAGS =   -ggdb3 -g3 -fsanitize=address
+LINKERS = -lft -lreadline #-fsanitize=address
 
-SRC_FILES= $(wildcard main.c ./execution/*.c ./execution/builtins/*.c ./lexer/*.c ./lexer/ast_print/*.c)
+SRC_FILES= $(wildcard ./Lexer/*.c ../collector.c ./parsing_main.c)
 SRC_OBJ= $(SRC_FILES:%.c=%.o)
 
 
-LIBFT_DIR = Libft
+LIBFT_DIR = ../Libft
 LIBFT = $(LIBFT_DIR)/libft.a
 NAME=minishell
 

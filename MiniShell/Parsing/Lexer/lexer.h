@@ -8,7 +8,7 @@
 # include <stdbool.h>
 # include <stddef.h>
 # include <unistd.h>
-# include "../Libft/libft.h"
+# include "../../Libft/libft.h"
 
 typedef	enum e_token_type
 {
@@ -38,5 +38,10 @@ void	free_tokens(t_token **tokens);
 bool    syntax_is_valid(t_token *tokens);
 bool    check_pipe_syntax(t_token *token);
 bool    check_redirection_syntax(t_token *tokens);
+t_token	*tokenize_input(char *input);
+bool	collect_word_token(t_token **tokens, char *input, int *i);
+bool	append_quoted_segment(char **buffer, char *input, int *i);
+char	*append_char_to_buffer(char *buffer, char c);
+bool	handle_operator_token(t_token **tokens, char *input, int *i);
 void    *gc_calloc(int size);
 #endif

@@ -21,6 +21,7 @@
 ---
 <details>
 <summary>Processes</summary>
+
 # Processes
 
 We will take a look how to work with multiple processes inside our C programs and how to communicate between them.  
@@ -34,6 +35,7 @@ A process is an instance of a computer program that is being executed, the progr
 + **Negative value** `-1` if the creation of a child process was failed;  
 + **Zero** returned to the new child process which created;  
 + **Positive value** returned to the parent or caller.
+
 
 ```C
 #include<stdio.h>
@@ -319,6 +321,12 @@ There are different types of shells :
 + **Bourne shell (`sh`);**  
 + **Bourne Again Shell (`bash`);**  
 + **Z shell (`zsh`)**  
+
+</details>
+---
+
+
+
 
 ## How Shell works
 

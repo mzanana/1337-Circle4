@@ -45,6 +45,8 @@ void	pipe_child(t_cmd *cmd, int in_fd, int pipefd[2], t_env **env)
 	}
 	if (handle_redirections(cmd->redir))
 		exit(1);
+	if (!cmd->argv)
+		exit(0);
 	if (is_builtin(cmd->argv[0]))
 	{
 		exit_code = run_builtin(cmd, env);
@@ -102,7 +104,7 @@ int	run_command(t_cmd *cmds, t_env **env)
 	int	saved_stdin;
 	int	saved_stdout;
 
-	if (is_single_builtin(cmds))
+	if (cmds->argv && is_single_builtin(cmds))
 	{
 		saved_stdin = dup(STDIN_FILENO);
 		saved_stdout = dup(STDOUT_FILENO);

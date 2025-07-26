@@ -8,8 +8,9 @@
 # include <sys/wait.h>
 # include <readline/readline.h>
 # include "../Libft/libft.h"
+# include "../lexer/parce.h"
 
-typedef enum s_redir_type
+/*typedef enum s_redir_type
 {
 	R_INPUT,
 	R_OUTPUT,
@@ -37,6 +38,7 @@ typedef struct s_env
 	char	*value;
 	struct s_env	*next;
 }	t_env;
+*/
 
 /* builtins */
 int	ft_echo(char **argv);
