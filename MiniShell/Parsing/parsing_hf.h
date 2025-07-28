@@ -1,5 +1,5 @@
-#ifndef LEXER_H
-#define LEXER_H
+#ifndef PARSING_HF_H
+#define PARSING_HF_H
 
 # include <stdio.h>
 # include <stdlib.h>
@@ -8,8 +8,10 @@
 # include <stdbool.h>
 # include <stddef.h>
 # include <unistd.h>
-# include "../../Libft/libft.h"
+# include "../Libft/libft.h"
 
+// Lexer struct : 
+//
 typedef	enum e_token_type
 {
 	T_WORD,
@@ -27,6 +29,34 @@ typedef struct s_token
 	struct s_token	*next;
 }	t_token;
 
+
+// Parser Struct :
+
+typedef	enum s_rtype
+{
+	R_IN,
+	R_OUT,
+	R_APP,
+	R_HER
+}	t_rtype;
+
+typedef struct s_redir
+{
+	t_rtype		type;
+	char		*filename;
+	bool		quoted;
+	struct s_redir	*next;
+}	t_redir;
+
+typedef struct s_cmd
+{
+	char		**argv;
+	t_redir		*redir;
+	struct s_cmd	*next;
+} t_cmd;
+
+// Functions Prototypes :
+char *ft_readline (const char *str);
 char    *ft_strndup(char *str, size_t n);
 int	is_operator(char c);
 int	is_space(char c);
