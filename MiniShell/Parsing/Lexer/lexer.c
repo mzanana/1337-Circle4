@@ -39,7 +39,7 @@ bool	handle_operator_token(t_token **tokens, char *input, int *i)
 	}
 	if (!value)
 		return (false);
-	new_token = token_new(value, type, false, false);
+	new_token = token_new(value, type);
 	if (!new_token)
 		return (false);
 	token_add_back(tokens, new_token);
@@ -116,7 +116,7 @@ bool	collect_word_token(t_token **tokens, char *input, int *i)
 			(*i)++;
 		}
 	}
-	new_token = token_new(buffer, T_WORD, false, false);
+	new_token = token_new(buffer, T_WORD);
 	if (!new_token)
 		return (false);
 	token_add_back(tokens, new_token);
@@ -154,4 +154,3 @@ t_token	*tokenize_input(char *input)
 	}
 	return (tokens);
 }
-j
