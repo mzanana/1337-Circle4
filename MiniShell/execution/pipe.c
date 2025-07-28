@@ -31,6 +31,7 @@ void	pipe_child(t_cmd *cmd, int in_fd, int pipefd[2], t_env **env)
 {
 	int	exit_code;
 	char	*path;
+	char	**real_envp;
 
 	if (in_fd != 0)
 	{
@@ -58,8 +59,10 @@ void	pipe_child(t_cmd *cmd, int in_fd, int pipefd[2], t_env **env)
 		write(2, "Command not found\n", 19);
 		exit(127);
 	}
-	execve(path, cmd->argv, NULL);
+	real_envp = env_to_envp(*env);
+	execve(path, cmd->argv, real_envp);
 	perror("execve");
+	free_envp_array(real_envp);
 	free(path);
 	exit(1);
 }
@@ -104,12 +107,18 @@ int	run_command(t_cmd *cmds, t_env **env)
 	int	saved_stdin;
 	int	saved_stdout;
 
+	if (cmds->argv && is_single_builtin(cmds) && !ft_strcmp(cmds->argv[0], "exit"))
+		ft_exit(cmds->argv, status_get());
 	if (cmds->argv && is_single_builtin(cmds))
 	{
 		saved_stdin = dup(STDIN_FILENO);
 		saved_stdout = dup(STDOUT_FILENO);
 		if (handle_redirections(cmds->redir))
 		{
+			dup2(saved_stdin, STDIN_FILENO);
+			dup2(saved_stdout, STDOUT_FILENO);
+			close(saved_stdin);
+			close(saved_stdout);
 			status_set(1);
 			return (1);
 		}

@@ -1,5 +1,38 @@
 #include "exec.h"
 
+void	ft_free_split(char **arr)
+{
+	int	i;
+
+	if (!arr)
+		return;
+	i = 0;
+	while (arr[i])
+	{
+		free(arr[i]);
+		i++;
+	}
+	free(arr);
+}
+
+void	free_cmds(t_cmd *cmd)
+{
+	while (cmd)
+	{
+		t_cmd	*next = cmd->next;
+		ft_free_split(cmd->argv);
+		while(cmd->redir)
+		{
+			t_redir	*rd_next = cmd->redir->next;
+			free(cmd->redir->filename);
+			free(cmd->redir);
+			cmd->redir = rd_next;
+		}
+		free(cmd);
+		cmd = next;
+	}
+}
+
 void	free_env_list(t_env *env)
 {
 	t_env *tmp;
@@ -48,7 +81,7 @@ int	run_builtin(t_cmd *cmd, t_env **env)
 		return (status_set(ft_unset(cmd->argv, env)), status_get());
 	if (!ft_strcmp(cmd->argv[0], "env"))
 		return (status_set(ft_env(cmd->argv, *env)), status_get());
-	if (!ft_strcmp(cmd->argv[0], "exit"))
-		ft_exit(cmd->argv, status_get());
+	//if (!ft_strcmp(cmd->argv[0], "exit"))
+	//	ft_exit(cmd->argv, status_get());
 	return (1);
 }
