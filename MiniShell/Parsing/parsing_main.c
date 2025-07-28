@@ -1,4 +1,4 @@
-#include "./Lexer/lexer.h"
+#include "parsing_hf.h"
 
 const char      *token_type_to_str(t_token_type type)
 {
@@ -29,36 +29,49 @@ void	print_tokens(t_token *tokens)
 		tokens = tokens->next;
 	}
 }
+char *ft_readline (const char *str)
+{
+	char *ret;
+
+	ret = readline(str);
+	if (!ret)
+	{
+		printf("exit\n");
+		return NULL;
+	}	
+	if (*ret)
+		add_history(ret);
+	return (ret);
+}
+
+bool check_tokens(t_token *tokens, char **line)
+{
+	if (!tokens || !syntax_is_valid(tokens))
+	{
+		free(*line);
+		*line = NULL;
+		gc_calloc(-1);
+		return 0;
+	}
+	return 1;
+}
 
 int	main()
 {
 	char	*line;
 	t_token	*tokens;
+	t_cmd	*commands;
 
 	while (1)
 	{
-		line = readline("minishell$ ");
+		line = ft_readline("minishell$ ");
 		if (!line)
-		{
-			printf("exit\n");
-			break ;
-		}
-		if (*line)
-			add_history(line);
+			break;
 		tokens = tokenize_input(line);
+		if (!check_tokens(tokens, &line))
+			continue ;
+		commands = tokens_to_commands(tokens);
 		
-		if (!tokens)
-		{
-			free(line);
-			gc_calloc(-1);
-			continue ;
-		}
-		if (!syntax_is_valid(tokens))
-		{
-			free(line);
-			gc_calloc(-1);
-			continue ;
-		}
 		printf ("\nTokenizer output :\n");
 		print_tokens(tokens);
 		printf ("\nParser output :\n\n");
