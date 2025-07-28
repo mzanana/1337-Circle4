@@ -32,6 +32,7 @@
                          if (head)
 			 {
 			 	last_status = run_command(head, &env);
+				free_cmds(head);
 				status_set(last_status);
 			 }
                  }
