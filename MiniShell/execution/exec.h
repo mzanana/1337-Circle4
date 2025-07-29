@@ -76,4 +76,5 @@ int	run_command(t_cmd *cmds, t_env **env);
 char	**env_to_envp(t_env *env);
 void	free_envp_array(char **envp);
 t_redir	*new_redir(t_redir_type type, char *filename);
+void log_err(char *msg);
 #endif
