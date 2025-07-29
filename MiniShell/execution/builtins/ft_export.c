@@ -66,21 +66,31 @@ t_env	*find_new(t_env *env, char *key)
 	return (NULL);
 }
 
-int	check_valide_key(char *arg, char *equale_signe)
+void	print_export_error(char *arg)
 {
-	if (!equale_signe)
+	write(2, "bash: export: `", 15);
+	write(2, arg, ft_strlen(arg));
+	write(2, "': not a valid identifier\n", 26);
+}
+
+int	check_valide_key(char *arg)
+{
+	int	i;
+
+	i = 0;
+	if (!(ft_isalpha(arg[0]) || arg[0] == '_' ))
 	{
-		write(2, "bash: export: invalid argument\n", 32);
+		print_export_error(arg);
 		return (1);
 	}
-	while (arg != equale_signe)
+	while (arg[i] && arg[i] != '=')
 	{
-		if (!_is_var_char(*arg))
+		if (!_is_var_char(arg[i]))
 		{
-			write(2, "bash: export: invalid argument\n", 32);
+			print_export_error(arg);
 			return (1);
 		}
-		arg++;
+		i++;
 	}
 	return (0);
 }
@@ -93,25 +103,33 @@ int	update_or_add_env(char *arg, t_env **env)
 	t_env	*do_exist;
 	size_t	key_len;
 
+	value = NULL;
 	equal_sign = ft_strchr(arg, '=');
-	if (check_valide_key(arg, equal_sign))
+	if (check_valide_key(arg))
 		return (1);
-	key_len = equal_sign - arg;
-	key = ft_substr(arg, 0, key_len);
-	if (!key)
-		return (1);
-	value = ft_strdup(equal_sign + 1);
-	if (!value)
+	if (equal_sign)
+	{
+		key_len = equal_sign - arg;
+		key = ft_substr(arg, 0, key_len);
+		value = ft_strdup(equal_sign + 1);
+	}
+	else
+		key = ft_strdup(arg);
+	if (!key || (equal_sign && !value))
 	{
 		free(key);
+		free(value);
 		return (1);
 	}
 	do_exist = find_new(*env, key);
 	if (do_exist)
 	{
-		free(do_exist->value);
 		free(key);
-		do_exist->value = value;
+		if (equal_sign)
+		{
+			free(do_exist->value);
+			do_exist->value = value;
+		}
 	}
 	else
 		env_add_back(env, env_new(key, value));
