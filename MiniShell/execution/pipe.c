@@ -1,5 +1,37 @@
 #include "exec.h"
 
+void	print_err(char *msg1, char *path, char *msg2)
+{
+	write(2, msg1, ft_strlen(msg1));
+	write(2, path, ft_strlen(path));
+	write(2, msg2, ft_strlen(msg2));
+}
+
+int	check_executable(char *path)
+{
+	struct stat	st;
+
+	if (stat(path, &st) == 0)
+	{
+		if (S_ISDIR(st.st_mode))
+		{
+			print_err("bash: ", path, ": Is a directory\n");
+			exit(126);
+		}
+		if (access(path, X_OK) == -1)
+		{
+			print_err("bash: ", path, ": Permission denied\n");
+			exit(126);
+		}
+	}
+	else
+	{
+		print_err("bash: ", path, ": No such file or directory\n");
+		exit(127);
+	}
+	return (0);
+}
+
 int	create_pipe_if_needed(t_cmd *cmd, int pipefd[2])
 {
 	if (cmd->next)
@@ -56,15 +88,16 @@ void	pipe_child(t_cmd *cmd, int in_fd, int pipefd[2], t_env **env)
 	path = find_cmd_path(cmd->argv[0], *env);
 	if (!path)
 	{
-		write(2, "Command not found\n", 19);
+		print_err("bash: ", cmd->argv[0], ": command not found\n");
 		exit(127);
 	}
 	real_envp = env_to_envp(*env);
+	check_executable(path);
 	execve(path, cmd->argv, real_envp);
 	perror("execve");
 	free_envp_array(real_envp);
 	free(path);
-	exit(1);
+	exit(126);
 }
 
 int	execute_pipeline(t_cmd *cmds, t_env **env)
@@ -73,8 +106,10 @@ int	execute_pipeline(t_cmd *cmds, t_env **env)
 	int	fd[2];
 	int	status;
 	pid_t	pid;
+	pid_t	last_pid;
 
 	in_fd = 0;
+	last_pid = 0;
 	while (cmds)
 	{
 		create_pipe_if_needed(cmds, fd);
@@ -83,6 +118,7 @@ int	execute_pipeline(t_cmd *cmds, t_env **env)
 			pipe_child(cmds, in_fd, fd, env);
 		else
 		{
+			last_pid = pid;
 			if (in_fd != 0)
 				close(in_fd);
 			if (cmds->next)
@@ -93,13 +129,38 @@ int	execute_pipeline(t_cmd *cmds, t_env **env)
 		}
 		cmds = cmds->next;
 	}
-	while (waitpid(-1, &status, 0) > 0)
-		;
-	if (WIFEXITED(status))
-		status_set(WEXITSTATUS(status));
-	else
-		status_set(1);
+	while ((pid = waitpid(-1, &status, 0)) > 0)
+	{
+		if (pid == last_pid)
+		{
+			if (WIFEXITED(status))
+				status_set(WEXITSTATUS(status));
+			else if (WIFSIGNALED(status))
+				status_set(128 + WTERMSIG(status));
+		}
+	}
 	return (status_get());
+}
+
+void	skip_empty_cmd(t_cmd *cmd)
+{
+	int	i;
+	int	j;
+
+	if (!cmd->argv)
+		return ;
+	i = 0;
+	while (cmd->argv[i] && cmd->argv[i][0] == '\0')
+		i++;
+	if (!cmd->argv[i])
+	{
+		cmd->argv[0] = NULL;
+		return ;
+	}
+	j = 0;
+	while (cmd->argv[i])
+		cmd->argv[j++] = cmd->argv[i++];
+	cmd->argv[j] = NULL;
 }
 
 int	run_command(t_cmd *cmds, t_env **env)
@@ -107,6 +168,12 @@ int	run_command(t_cmd *cmds, t_env **env)
 	int	saved_stdin;
 	int	saved_stdout;
 
+	skip_empty_cmd(cmds);
+	if (!cmds->argv || !cmds->argv[0])
+	{
+		status_set(0);
+		return (0);
+	}
 	if (cmds->argv && is_single_builtin(cmds) && !ft_strcmp(cmds->argv[0], "exit"))
 		ft_exit(cmds->argv, status_get());
 	if (cmds->argv && is_single_builtin(cmds))
@@ -132,35 +199,3 @@ int	run_command(t_cmd *cmds, t_env **env)
 	else
 		return (execute_pipeline(cmds, env));
 }
-
-/*int	main(int ac, char **av, char **envp)
-{
-	(void)ac;
-	(void)av;
-	t_env	*env = init_env_list(envp);
-	t_cmd	*cmd1 = malloc(sizeof(t_cmd));
-	//t_cmd	*cmd2 = malloc(sizeof(t_cmd));
-	//t_cmd	*cmd3 = malloc(sizeof(t_cmd));
-
-	t_redir	*redir = malloc(sizeof(t_redir));
-
-	cmd1->argv = ft_split("echo hello", ' ');
-	cmd1->redir = redir;
-	cmd1->next = NULL;
-
-	//cmd2->argv = ft_split("echo hello world", ' ');
-	//cmd2->redir = redir;
-	//cmd2->next = NULL;
-
-	redir->type = R_OUTPUT;
-	redir->filename = ft_strdup("testing");
-	redir->next = NULL;
-
-	//cmd3->argv = ft_split("wc -l", ' ');
-	//cmd3->redir = NULL;
-	//cmd3->next = NULL;
-
-	run_command(cmd1, &env);
-	free_env_list(env);
-	return (0);
-}*/
