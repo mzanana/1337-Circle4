@@ -43,7 +43,8 @@ char	**env_to_envp(t_env *env)
 	i = 0;
 	while (tmp)
 	{
-		envp[i++] = join_key_value(tmp->key, tmp->value);
+		if (tmp->value)
+			envp[i++] = join_key_value(tmp->key, tmp->value);
 		tmp = tmp->next;
 	}
 	envp[i] = NULL;
