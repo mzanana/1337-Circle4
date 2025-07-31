@@ -33,17 +33,9 @@ typedef struct s_token
 
 // Parser Struct :
 
-typedef	enum s_rtype
-{
-	R_IN,
-	R_OUT,
-	R_APP,
-	R_HER
-}	t_rtype;
-
 typedef struct s_redir
 {
-	t_rtype		type;
+	t_token_type		type;
 	char		*filename;
 	bool		quoted;
 	struct s_redir	*next;
@@ -73,4 +65,7 @@ bool	append_quoted_segment(char **buffer, char *input, int *i);
 char	*append_char_to_buffer(char *buffer, char c);
 bool	handle_operator_token(t_token **tokens, char *input, int *i);
 void    *gc_calloc(int size);
+
+void print_parsed_commands(t_cmd *cmds);
+t_cmd *tokens_to_commands(t_token *tokens);
 #endif

@@ -70,11 +70,11 @@ int	main()
 		tokens = tokenize_input(line);
 		if (!check_tokens(tokens, &line))
 			continue ;
+		// printf ("\nTokenizer output :\n");
+		// print_tokens(tokens);
 		commands = tokens_to_commands(tokens);
-		
-		printf ("\nTokenizer output :\n");
-		print_tokens(tokens);
 		printf ("\nParser output :\n\n");
+		print_parsed_commands(commands);
 		gc_calloc(-1);
 		free(line);
 	}
