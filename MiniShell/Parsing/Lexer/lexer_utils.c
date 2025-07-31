@@ -31,7 +31,7 @@ int	is_space(char c)
 	return (c == ' ' || (c >= 9 && c <= 13));
 }
 
-t_token	*token_new(char *value, t_token_type type)
+t_token	*token_new(char *value, t_token_type type, bool quoted)
 {
 	t_token	*token;
 
@@ -40,6 +40,7 @@ t_token	*token_new(char *value, t_token_type type)
 		return (NULL);
 	token->value = value;
 	token->type = type;
+	token->is_quoted = quoted;
 	token->next = NULL;
 	return (token);
 }

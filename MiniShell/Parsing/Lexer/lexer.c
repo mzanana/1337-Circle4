@@ -39,7 +39,7 @@ bool	handle_operator_token(t_token **tokens, char *input, int *i)
 	}
 	if (!value)
 		return (false);
-	new_token = token_new(value, type);
+	new_token = token_new(value, type, 0);
 	if (!new_token)
 		return (false);
 	token_add_back(tokens, new_token);
@@ -97,8 +97,10 @@ bool	collect_word_token(t_token **tokens, char *input, int *i)
 {
 	char	*buffer;
 	t_token	*new_token;
+	bool	quoted;
 
 	buffer = NULL;
+	quoted = 0;
 	while (input[*i])
 	{
 		if (is_space(input[*i]) || is_operator(input[*i]))
@@ -107,6 +109,7 @@ bool	collect_word_token(t_token **tokens, char *input, int *i)
 		{
 			if (!append_quoted_segment(&buffer, input, i))
 				return (false);
+			quoted = 1;
 		}
 		else
 		{
@@ -116,7 +119,7 @@ bool	collect_word_token(t_token **tokens, char *input, int *i)
 			(*i)++;
 		}
 	}
-	new_token = token_new(buffer, T_WORD);
+	new_token = token_new(buffer, T_WORD, quoted);
 	if (!new_token)
 		return (false);
 	token_add_back(tokens, new_token);

@@ -53,9 +53,8 @@ char *ft_readline (const char *str);
 char    *ft_strndup(char *str, size_t n);
 int	is_operator(char c);
 int	is_space(char c);
-t_token	*token_new(char *value, t_token_type type);
+t_token	*token_new(char *value, t_token_type type, bool quoted);
 void	token_add_back(t_token **head, t_token *new);
-void	free_tokens(t_token **tokens);
 bool    syntax_is_valid(t_token *tokens);
 bool    check_pipe_syntax(t_token *token);
 bool    check_redirection_syntax(t_token *tokens);
@@ -68,4 +67,5 @@ void    *gc_calloc(int size);
 
 void print_parsed_commands(t_cmd *cmds);
 t_cmd *tokens_to_commands(t_token *tokens);
+
 #endif
