@@ -2,7 +2,7 @@ CC = cc -g
 #CFLAGS =   -ggdb3 -g3 -fsanitize=address
 LINKERS = -lft -lreadline #-fsanitize=address
 
-SRC_FILES= $(wildcard ./Lexer/*.c ./collector.c ./parsing_main.c)
+SRC_FILES= $(wildcard ./Lexer/*.c ./collector.c ./parsing_main.c ./Parser/parser.c)
 SRC_OBJ= $(SRC_FILES:%.c=%.o)
 
 
