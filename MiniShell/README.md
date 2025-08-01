@@ -17,11 +17,10 @@
 		- [Pipelines](#pipelines)  
 	- [Shell Parameters](#shell-parameters)  
 ---
+## Processes
 
 <details>
 <summary>Processes</summary>
-
-# Processes
 
 We will take a look how to work with multiple processes inside our C programs and how to communicate between them.  
 
@@ -303,8 +302,9 @@ The problem is from the `open` system call, on the manual of `open`  :
 	<img src="https://i.imgur.com/8AbcgQg.png" width="700">
 </p>
 So we need another process to open the same FIFO file for reading.  
+</details>
 
-
+---
 # Shell & Bash
 
 **Shell** is program that provides a command-line interface between the user and the operating system (the kernel).  
@@ -317,12 +317,6 @@ There are different types of shells :
 + **Bourne shell (`sh`);**  
 + **Bourne Again Shell (`bash`);**  
 + **Z shell (`zsh`)**  
-
-</details>
----
-
-
-
 
 ## How Shell works
 
@@ -337,7 +331,6 @@ Those are the **steps** of Shell operation :
 + Parses the tokens into simple and compound commands;   
 + Performs the expanded tokens into the lists of filenames and commands and arguments;  
 + **Executes the command.**  
-
 
 ## Quoting  
 
