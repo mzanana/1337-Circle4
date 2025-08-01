@@ -44,16 +44,3 @@ int	ft_unset(char **argv, t_env **env)
 	}
 	return (0);
 }
-
-/*int	main(int ac, char **av, char **envp)
-{
-	(void)ac;
-
-	t_env	*env = init_env_list(envp);
-	ft_unset(av, &env);
-	while (env)
-	{
-		printf("%s=%s\n", env->key, env->value);
-		env = env->next;
-	}
-}*/

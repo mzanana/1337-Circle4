@@ -24,18 +24,3 @@ t_env	*init_env_list(char **envp)
 	}
 	return (env);
 }
-
-
-/*int	main(int ac, char **av, char **envp)
-{
-	(void)ac;
-	(void)av;
-	t_env	*env;
-
-	env = init_env_list(envp);
-	while (env)
-	{
-		printf("%s=%s\n", env->key, env->value);
-		env = env->next;
-	}
-}*/

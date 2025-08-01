@@ -82,20 +82,3 @@ char	*find_cmd_path(char *cmd, t_env *env)
 	ft_free_split(paths);
 	return (NULL);
 }
-
-/*int	main(int ac, char **av, char **envp)
-{
-	(void)ac;
-	char	*path;
-
-	t_env	*env = init_env_list(envp);
-	path = find_cmd_path(av[1], env);
-	if (path)
-	{
-		printf("Path: %s\n", path);
-		free(path);
-	}
-	else
-		printf("Command not found\n");
-	return (0);
-}*/

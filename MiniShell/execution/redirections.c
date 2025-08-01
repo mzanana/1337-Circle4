@@ -79,32 +79,3 @@ t_redir	*new_redir(t_redir_type type, char *filename)
 	redir->next = NULL;
 	return (redir);
 }
-
-/*int	main(int ac, char **av, char **envp)
-{
-	(void)ac;
-	(void)av;
-	pid_t	pid;
-	t_redir	*redir = NULL;
-	
-	//redir = new_redir(R_HEREDOC, "lala");
-	redir = new_redir(R_INPUT, "lala.txt");
-	redir->next = new_redir(R_OUTPUT, "hello.txt");
-	redir->next->next = new_redir(R_APPAND, "test.c");
-	pid = fork();
-	if (pid == 0)
-	{
-		if (handle_redirections(redir) != 0)
-		{
-			perror("redirection");
-			write(2, "redirection failed\n", 20);
-			exit(1);
-		}
-		char	*cmd[] = {"/bin/cat", NULL};
-		execve(cmd[0], cmd, envp);
-		perror("execev");
-		exit(1);
-	}
-	else
-		wait(NULL);
-}*/
