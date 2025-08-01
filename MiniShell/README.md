@@ -19,6 +19,7 @@
 ---
 ## Processes
 
+---
 <details>
 <summary>Processes</summary>
 
@@ -303,8 +304,9 @@ The problem is from the `open` system call, on the manual of `open`  :
 </p>
 So we need another process to open the same FIFO file for reading.  
 </details>
-
+  
 ---
+
 # Shell & Bash
 
 **Shell** is program that provides a command-line interface between the user and the operating system (the kernel).  
