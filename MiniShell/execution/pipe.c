@@ -163,39 +163,59 @@ void	skip_empty_cmd(t_cmd *cmd)
 	cmd->argv[j] = NULL;
 }
 
+void	save_stdio(int *in, int *out)
+{
+	*in = dup(STDIN_FILENO);
+	*out = dup(STDOUT_FILENO);
+}
+
+void	restore_stdio(int in, int out)
+{
+	dup2(in, STDIN_FILENO);
+	dup2(out, STDOUT_FILENO);
+	close(in);
+	close(out);
+}
+
+int	redir_with_no_cmd(t_redir *redir)
+{
+	int	saved_in;
+	int	saved_out;
+
+	save_stdio(&saved_in, &saved_out);
+	if (redir && handle_redirections(redir))
+	{
+		restore_stdio(saved_in, saved_out);
+		return (1);
+	}
+	restore_stdio(saved_in, saved_out);
+	return (0);
+}
+
 int	run_command(t_cmd *cmds, t_env **env)
 {
-	int	saved_stdin;
-	int	saved_stdout;
-
+	int (saved_in), (saved_out);
 	skip_empty_cmd(cmds);
 	if (!cmds->argv || !cmds->argv[0])
 	{
-		status_set(0);
-		return (0);
+		if (cmds->redir && redir_with_no_cmd(cmds->redir))
+			return(status_set(1), 1);
+		return (status_set(0), 0);
 	}
 	if (cmds->argv && is_single_builtin(cmds) && !ft_strcmp(cmds->argv[0], "exit"))
 		ft_exit(cmds->argv, status_get());
 	if (cmds->argv && is_single_builtin(cmds))
 	{
-		saved_stdin = dup(STDIN_FILENO);
-		saved_stdout = dup(STDOUT_FILENO);
-		if (handle_redirections(cmds->redir))
+		save_stdio(&saved_in, &saved_out);
+		if (cmds->redir && handle_redirections(cmds->redir))
 		{
-			dup2(saved_stdin, STDIN_FILENO);
-			dup2(saved_stdout, STDOUT_FILENO);
-			close(saved_stdin);
-			close(saved_stdout);
+			restore_stdio(saved_in, saved_out);
 			status_set(1);
 			return (1);
 		}
 		status_set(run_builtin(cmds, env));
-		dup2(saved_stdin, STDIN_FILENO);
-		dup2(saved_stdout, STDOUT_FILENO);
-		close(saved_stdin);
-		close(saved_stdout);
+		restore_stdio(saved_in, saved_out);
 		return (status_get());
 	}
-	else
-		return (execute_pipeline(cmds, env));
+	return (execute_pipeline(cmds, env));
 }
