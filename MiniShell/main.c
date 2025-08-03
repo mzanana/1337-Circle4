@@ -1,7 +1,7 @@
 #include "execution/exec.h"
 #include "lexer/parce.h"
 
- int     main(int ac, char **av, char **envp)
+int     main(int ac, char **av, char **envp)
  {
          (void) ac;
          (void) av;
