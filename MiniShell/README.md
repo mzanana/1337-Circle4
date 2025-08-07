@@ -20,8 +20,11 @@
 ## Processes
 
 ---
-<details>
+<!--<details>
 <summary>Processes</summary>
+-->
+# Processes
+
 
 We will take a look how to work with multiple processes inside our C programs and how to communicate between them.  
 
