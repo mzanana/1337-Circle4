@@ -22,17 +22,17 @@ int	ft_exit(char **argv, int last_status)
 {
 	int	code;
 
-	write(2, "exit\n", 5);
+	write(1, "exit\n", 5);
 	if (!argv[1])
 		exit(last_status);
 	if (!is_numeric(argv[1]))
 	{
-		write(2, "minishell: exit: numeric argument required\n", 44);
-		exit(255);
+		log_err("bash: exit: numeric argument required\n");
+		exit(2);
 	}
 	if (argv[2])
 	{
-		write(2, "minishell: exit: too many arguments\n", 37);
+		log_err("bash: exit: too many arguments\n");
 		return (1);
 	}
 	code = ft_atoi(argv[1]);// i need to update ft_atoi to handle overflow

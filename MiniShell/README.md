@@ -17,12 +17,14 @@
 		- [Pipelines](#pipelines)  
 	- [Shell Parameters](#shell-parameters)  
 ---
+## Processes
 
 ---
 <!--<details>
 <summary>Processes</summary>
 -->
 # Processes
+
 
 We will take a look how to work with multiple processes inside our C programs and how to communicate between them.  
 
@@ -304,9 +306,8 @@ The problem is from the `open` system call, on the manual of `open`  :
 	<img src="https://i.imgur.com/8AbcgQg.png" width="700">
 </p>
 So we need another process to open the same FIFO file for reading.  
-
 </details>
-
+  
 ---
 
 # Shell & Bash
@@ -322,12 +323,6 @@ There are different types of shells :
 + **Bourne Again Shell (`bash`);**  
 + **Z shell (`zsh`)**  
 
-</details>
----
-
-
-
-
 ## How Shell works
 
 In case facing the comment symbol (`#`) the shell ignore it with the rest of that line, otherwise the shell divide the input into **words** and **operators**.  
@@ -341,7 +336,6 @@ Those are the **steps** of Shell operation :
 + Parses the tokens into simple and compound commands;   
 + Performs the expanded tokens into the lists of filenames and commands and arguments;  
 + **Executes the command.**  
-
 
 ## Quoting  
 

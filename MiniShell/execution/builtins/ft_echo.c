@@ -6,6 +6,8 @@ int	is_option_n(char *str)
 
 	if (!str || str[0] != '-')
 		return (0);
+	if (str[1] == '\0')
+		return (0);
 	i = 1;
 	while (str[i])
 	{

@@ -6,6 +6,7 @@
 # include <stdlib.h>
 # include <fcntl.h>
 # include <sys/wait.h>
+# include <sys/stat.h>
 # include <readline/readline.h>
 # include "../Libft/libft.h"
 # include "../lexer/parce.h"
@@ -62,14 +63,20 @@ int	is_builtin(char *cmd);
 int	run_builtin(t_cmd *cmd, t_env **env);
 int	is_single_builtin(t_cmd *cmd);
 void	free_env_list(t_env *env);//temporary
+void	ft_free_split(char **arr);
+void	free_cmds(t_cmd *cmd);
 
 
 int	ft_cd(char **argv);
+
 
 int	status_get(void);
 void	status_set(int value);
 
 int	run_command(t_cmd *cmds, t_env **env);
+char	**env_to_envp(t_env *env);
+void	free_envp_array(char **envp);
 t_redir	*new_redir(t_redir_type type, char *filename);
-void	free_env_list(t_env *env);
+void	log_err(char *msg);
+void	print_err(char *msg1, char *path, char *msg2);
 #endif
