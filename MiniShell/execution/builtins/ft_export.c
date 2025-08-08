@@ -155,19 +155,3 @@ int	ft_export(char **argv, t_env **env)
 	}
 	return (0);
 }
-
-/*int	main(int ac, char **av, char **envp)
-{
-	(void)ac;
-
-	t_env	*env = init_env_list(envp);
-	ft_export(av, &env);
-	//if (status == 0)
-	{
-		while (env)
-		{
-			printf("%s=%s\n", env->key, env->value);
-			env = env->next;
-		}
-	}//
-}*/

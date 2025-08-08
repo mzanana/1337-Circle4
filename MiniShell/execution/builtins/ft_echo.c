@@ -41,13 +41,3 @@ int	ft_echo(char **argv)
 		printf("\n");
 	return (0);
 }
-
-/*int	main()
-{
-	t_cmd	*cmd = malloc(sizeof(t_cmd));
-
-	cmd->argv = ft_split("echo |", ' ');
-	cmd->redir = NULL;
-	cmd->next = NULL;
-	ft_echo(cmd->argv);
-}*/
