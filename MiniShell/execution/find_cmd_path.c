@@ -3,11 +3,8 @@
 char	*ft_strjoing_free(char *s1, char *s2)
 {
 	char	*joined;
-	int	len1;
-	int	len2;
-	int	i;
-	int	j;
 
+	int (len1), (len2), (i), (j);
 	len1 = ft_strlen(s1);
 	len2 = ft_strlen(s2);
 	joined = malloc(len1 + len2 + 1);
@@ -43,11 +40,9 @@ char	*get_env_value(t_env *env, char *key)
 
 char	*find_cmd_path(char *cmd, t_env *env)
 {
-	char	*path_value;
-	char	**paths;
-	char	*full_path;
 	int	i;
 
+	char (*path_value), (**paths), (*full_path);
 	if (!cmd)
 		return (NULL);
 	path_value = get_env_value(env, "PATH");
@@ -61,24 +56,14 @@ char	*find_cmd_path(char *cmd, t_env *env)
 	{
 		full_path = ft_strjoin(paths[i], "/");
 		if (!full_path)
-		{
-			ft_free_split(paths);
-			return (NULL);
-		}
+			return (ft_free_split(paths) ,NULL);
 		full_path = ft_strjoing_free(full_path, cmd);
 		if (!full_path)
-		{
-			ft_free_split(paths);
-			return (NULL);
-		}
+			return (ft_free_split(paths) ,NULL);
 		if (access(full_path, X_OK) == 0)
-		{
-			ft_free_split(paths);
-			return (full_path);
-		}
+			return (ft_free_split(paths) ,full_path);
 		free(full_path);
 		i++;
 	}
-	ft_free_split(paths);
-	return (NULL);
+	return (ft_free_split(paths) ,NULL);
 }

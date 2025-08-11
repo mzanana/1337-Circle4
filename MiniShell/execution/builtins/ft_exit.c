@@ -22,7 +22,8 @@ int	ft_exit(char **argv, int last_status)
 {
 	int	code;
 
-	write(1, "exit\n", 5);
+	if (isatty(STDIN_FILENO))
+		write(1, "exit\n", 5);
 	if (!argv[1])
 		exit(last_status);
 	if (!is_numeric(argv[1]))

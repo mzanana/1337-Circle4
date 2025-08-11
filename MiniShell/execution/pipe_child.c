@@ -19,7 +19,7 @@ void	exec_builtin_child(t_cmd *cmd, t_env **env)
 {
 	int	exit_code;
 
-	exit_code = run_builtin(cmd, env);
+	exit_code = run_builtin_child(cmd, env);
 	exit(exit_code);
 }
 
