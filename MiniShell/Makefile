@@ -1,8 +1,8 @@
-CC = cc
+CC = cc -Wall -Wextra -Werror
 CFLAGS =   -ggdb3 -g3
 LINKERS = -lft -lreadline
 
-SRC_FILES= $(wildcard main.c ./execution/*.c ./execution/builtins/*.c ./lexer/*.c ./lexer/ast_print/*.c)
+SRC_FILES= $(wildcard ./*.c ./execution/*.c ./execution/builtins/*.c ./Parsing/*.c ./Parsing/Parser/*.c ./Parsing/Lexer/*.c)
 SRC_OBJ= $(SRC_FILES:%.c=%.o)
 
 

@@ -48,6 +48,16 @@ typedef struct s_cmd
 	struct s_cmd	*next;
 } t_cmd;
 
+// Environement Struct :
+
+typedef struct s_env
+{
+	char *key;
+	char *value;
+	struct s_env *next;
+} t_env;
+
+
 // Functions Prototypes :
 char *ft_readline (const char *str);
 char    *ft_strndup(char *str, size_t n);
@@ -67,5 +77,6 @@ void    *gc_calloc(int size);
 
 void print_parsed_commands(t_cmd *cmds);
 t_cmd *tokens_to_commands(t_token *tokens);
-
+void ft_expand (t_cmd *command, t_env *env);
+bool check_tokens(t_token *tokens, char **line);
 #endif
