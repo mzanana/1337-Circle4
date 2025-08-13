@@ -36,6 +36,6 @@ int	ft_exit(char **argv, int last_status)
 		log_err("bash: exit: too many arguments\n");
 		return (1);
 	}
-	code = ft_atoi(argv[1]);// i need to update ft_atoi to handle overflow
+	code = ft_atoi(argv[1]);
 	exit(code % 256);
 }
