@@ -23,11 +23,10 @@ char	*join_key_value(char *key, char *value)
 
 char	**env_to_envp(t_env *env)
 {
-	int	len;
-	int	i;
 	char	**envp;
 	t_env	*tmp;
 
+	int (len), (i);
 	len = 0;
 	tmp = env;
 	while (tmp)
