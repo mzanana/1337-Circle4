@@ -16,7 +16,7 @@ int     main(int ac, char **av, char **envp)
          env = init_env_list(envp);
          while (1)
          {
-                 input = readline("minishell$ ");
+                 input = readline("\e[0;32mminishell$ \e[0m");
                  if (!input)
                  {
                          free(input);
