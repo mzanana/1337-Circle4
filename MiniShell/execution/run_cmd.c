@@ -54,7 +54,7 @@ int	run_command(t_cmd *cmds, t_env **env)
 {
 	int (saved_in), (saved_out);
 	skip_empty_cmd(cmds);
-	if (!cmds->argv || !cmds->argv[0])
+	if (!cmds->argv || !cmds->argv[0]) //no cmd just : < file or > file
 	{
 		if (cmds->redir && redir_with_no_cmd(cmds->redir))
 			return(status_set(1), 1);

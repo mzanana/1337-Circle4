@@ -41,12 +41,14 @@ int handle_redirections(t_redir *redir);
 /* find_cmd_path */
 char	*find_cmd_path(char *cmd, t_env *env);
 
-int		is_builtin(char *cmd);
-int		run_builtin(t_cmd *cmd, t_env **env);
-int 	is_single_builtin(t_cmd *cmd);
-void 	free_env_list(t_env *env); // temporary
-void 	ft_free_split(char **arr);
-void 	free_cmds(t_cmd *cmd);
+int	is_builtin(char *cmd);
+int	run_builtin(t_cmd *cmd, t_env **env);
+int	run_builtin_child(t_cmd *cmd, t_env **env);
+int	is_single_builtin(t_cmd *cmd);
+void	free_env_list(t_env *env);//temporary
+void	ft_free_split(char **arr);
+void	free_cmds(t_cmd *cmd);
+
 
 int		status_get(void);
 void	status_set(int value);

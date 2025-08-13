@@ -95,12 +95,29 @@ int	check_valide_key(char *arg)
 	return (0);
 }
 
+void apply_env(char *key, char *value, t_env **env, char *eq)
+{
+	t_env	*do_exist;
+
+	do_exist = find_new(*env, key);
+	if (do_exist)
+	{
+		free(key);
+		if (eq)
+		{
+			free(do_exist->value);
+			do_exist->value = value;
+		}
+	}
+	else
+		env_add_back(env, env_new(key, value));
+}
+
 int	update_or_add_env(char *arg, t_env **env)
 {
 	char	*equal_sign;
 	char	*key;
 	char	*value;
-	t_env	*do_exist;
 	size_t	key_len;
 
 	value = NULL;
@@ -121,22 +138,10 @@ int	update_or_add_env(char *arg, t_env **env)
 		free(value);
 		return (1);
 	}
-	do_exist = find_new(*env, key);
-	if (do_exist)
-	{
-		free(key);
-		if (equal_sign)
-		{
-			free(do_exist->value);
-			do_exist->value = value;
-		}
-	}
-	else
-		env_add_back(env, env_new(key, value));
+	apply_env(key, value, env, equal_sign);
 	return (0);
 }
 
-// i still need to print the env in the right order !!!!!
 int	ft_export(char **argv, t_env **env)
 {
 	int	i;

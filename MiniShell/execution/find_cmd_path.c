@@ -3,11 +3,8 @@
 char	*ft_strjoing_free(char *s1, char *s2)
 {
 	char	*joined;
-	int	len1;
-	int	len2;
-	int	i;
-	int	j;
 
+	int (len1), (len2), (i), (j);
 	len1 = ft_strlen(s1);
 	len2 = ft_strlen(s2);
 	joined = malloc(len1 + len2 + 1);
@@ -40,13 +37,34 @@ char	*get_env_value(t_env *env, char *key)
 	}
 	return (NULL);
 }
+static char	*search_in_paths(char **paths, char *cmd)
+{
+	int		i;
+	char	*full_path;
+	char	*tmp;
+
+	i = 0;
+	while (paths[i])
+	{
+		tmp = ft_strjoin(paths[i], "/");
+		if (!tmp)
+			return (ft_free_split(paths), NULL);
+		full_path = ft_strjoing_free(tmp, cmd);
+		if (!full_path)
+			return (ft_free_split(paths), NULL);
+		if (access(full_path, X_OK) == 0)
+			return (ft_free_split(paths), full_path);
+		free(full_path);
+		i++;
+	}
+	ft_free_split(paths);
+	return (NULL);
+}
 
 char	*find_cmd_path(char *cmd, t_env *env)
 {
 	char	*path_value;
 	char	**paths;
-	char	*full_path;
-	int	i;
 
 	if (!cmd)
 		return (NULL);
@@ -56,29 +74,5 @@ char	*find_cmd_path(char *cmd, t_env *env)
 	paths = ft_split(path_value, ':');
 	if (!paths)
 		return (NULL);
-	i = 0;
-	while (paths[i])
-	{
-		full_path = ft_strjoin(paths[i], "/");
-		if (!full_path)
-		{
-			ft_free_split(paths);
-			return (NULL);
-		}
-		full_path = ft_strjoing_free(full_path, cmd);
-		if (!full_path)
-		{
-			ft_free_split(paths);
-			return (NULL);
-		}
-		if (access(full_path, X_OK) == 0)
-		{
-			ft_free_split(paths);
-			return (full_path);
-		}
-		free(full_path);
-		i++;
-	}
-	ft_free_split(paths);
-	return (NULL);
+	return (search_in_paths(paths, cmd));
 }
