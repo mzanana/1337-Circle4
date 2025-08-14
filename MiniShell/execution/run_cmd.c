@@ -54,22 +54,27 @@ int	run_command(t_cmd *cmds, t_env **env)
 {
 	int (saved_in), (saved_out);
 	skip_empty_cmd(cmds);
-	if (!cmds->argv || !cmds->argv[0]) //no cmd just : < file or > file
+	if (!cmds->argv || !cmds->argv[0])
 	{
-		if (cmds->redir && redir_with_no_cmd(cmds->redir))
-			return(status_set(1), 1);
-		return (status_set(0), 0);
+		if (!cmds->next)
+		{
+			if (cmds->redir && redir_with_no_cmd(cmds->redir))
+				return(status_set(1), 1);
+			return (status_set(0), 0);
+		}
 	}
-	if (cmds->argv && is_single_builtin(cmds) && !ft_strcmp(cmds->argv[0], "exit"))
-		ft_exit(cmds->argv, status_get());
 	if (cmds->argv && is_single_builtin(cmds))
 	{
 		save_stdio(&saved_in, &saved_out);
 		if (cmds->redir && handle_redirections(cmds->redir))
 		{
 			restore_stdio(saved_in, saved_out);
-			status_set(1);
-			return (1);
+			return(status_set(1), 1);
+		}
+		if (!ft_strcmp(cmds->argv[0], "exit"))
+		{
+			restore_stdio(saved_in, saved_out);
+			ft_exit(cmds->argv, status_get());
 		}
 		status_set(run_builtin(cmds, env));
 		restore_stdio(saved_in, saved_out);
