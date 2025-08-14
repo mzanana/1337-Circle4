@@ -4,13 +4,13 @@ void	setup_pipes_child(int in_fd, t_cmd *cmd, int pipefd[2])
 {
 	if (in_fd != 0)
 	{
-		dup2(in_fd, STDIN_FILENO);
+		dup2(in_fd, STDIN_FILENO);// This connects stdin of this child to the previous pipe’s read-end
 		close(in_fd);
 	}
 	if (cmd->next)
 	{
 		close(pipefd[0]);
-		dup2(pipefd[1], STDOUT_FILENO);
+		dup2(pipefd[1], STDOUT_FILENO);// This connects stdout of this child to the current pipe’s write-end
 		close(pipefd[1]);
 	}
 }
