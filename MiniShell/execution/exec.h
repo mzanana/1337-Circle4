@@ -49,8 +49,11 @@ void	free_env_list(t_env *env);//temporary
 void	ft_free_split(char **arr);
 void	free_cmds(t_cmd *cmd);
 
+/* signals */
+void    setup_promt_signals(void);
+void	setup_child_signals(void);
 
-int		status_get(void);
+int	status_get(void);
 void	status_set(int value);
 
 int		run_command(t_cmd *cmds, t_env **env);
