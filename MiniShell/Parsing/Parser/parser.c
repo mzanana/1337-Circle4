@@ -79,22 +79,41 @@ void cmd_add_back(t_cmd **head, t_cmd *new)
 	return ;
 }
 
-char	*remove_qoutes_if_needed(char *s)
+char	*remove_qoutes_if_needed(char *s, bool *quoted)
 {
-	size_t	len;
+	char	*res;
+	char	qoute;
+	int	i;
+	int	j;
 
-	if (!s)
+	i = 0;
+	j = 0;
+	res = gc_calloc(ft_strlen(s) + 1);
+	if (!res || !s)
 		return (NULL);
-	len = ft_strlen(s);
-	if ((s[0] == '"' && s[len - 1] == '"') || (s[0] == '\'' && s[len - 1] == '\''))
-		return (ft_substr(s, 1, len -2));
-	return (s);
+	while (s[i])
+	{
+		if (s[i] == '"' || s[i] == '\'')
+		{
+			qoute = s[i++];
+			*quoted = true;
+			while (s[i] &&s[i] != qoute)
+				res[j++] = s[i++];
+			if (s[i] == qoute)
+				i++;
+		}
+		else
+			res[j++] = s[i++];
+	}
+	res[j] = '\0';
+	return (res);
 }
 t_cmd *tokens_to_commands(t_token *tokens)
 {
 	t_cmd	*ret;
 	t_cmd	*tmp;
 	char	*heredoc_del;
+	bool	is_quoted;
 	
 	ret = NULL;
 	while (tokens)
@@ -109,9 +128,10 @@ t_cmd *tokens_to_commands(t_token *tokens)
 			}
 			else
 			{
+				is_quoted = false;
 				heredoc_del = tokens->next->value;
 				if (tokens->type == T_HEREDOC)
-					heredoc_del = remove_qoutes_if_needed(heredoc_del);
+					heredoc_del = remove_qoutes_if_needed(heredoc_del, &is_quoted);
 				cmd_redir_fill(&(tmp->redir), tokens->type, heredoc_del, tokens->next->is_quoted);
 				tokens = tokens->next->next;
 			}
