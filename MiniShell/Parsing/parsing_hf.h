@@ -16,6 +16,8 @@
 # include <signal.h>
 # include <sys/ioctl.h> 
 
+
+extern bool	g_herdoc_stop;
 // Lexer struct : 
 //
 typedef	enum e_token_type
