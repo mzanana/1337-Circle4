@@ -50,7 +50,7 @@ void	cmd_redir_fill(t_redir **redir, t_token_type type, char * value, bool is_qu
 {
 	t_redir	*curr;
 	t_redir	*holder;
-
+	
 	if (!*redir)
 	{
 		*redir = redir_maker(type, value, is_quoted);
@@ -58,7 +58,7 @@ void	cmd_redir_fill(t_redir **redir, t_token_type type, char * value, bool is_qu
 	}
 	curr = *redir;
 	while (curr->next)
-		curr = curr->next;
+	curr = curr->next;
 	holder = redir_maker(type, value, is_quoted);
 	curr->next = holder;
 	return ;
@@ -66,7 +66,7 @@ void	cmd_redir_fill(t_redir **redir, t_token_type type, char * value, bool is_qu
 void cmd_add_back(t_cmd **head, t_cmd *new)
 {
 	t_cmd *tmp;
-
+	
 	if (!*head)
 	{
 		*head = new;
@@ -74,16 +74,28 @@ void cmd_add_back(t_cmd **head, t_cmd *new)
 	}
 	tmp = *head;
 	while (tmp->next)
-		tmp = tmp->next;
+	tmp = tmp->next;
 	tmp->next = new;
 	return ;
 }
 
+char	*remove_qoutes_if_needed(char *s)
+{
+	size_t	len;
+
+	if (!s)
+		return (NULL);
+	len = ft_strlen(s);
+	if ((s[0] == '"' && s[len - 1] == '"') || (s[0] == '\'' && s[len - 1] == '\''))
+		return (ft_substr(s, 1, len -2));
+	return (s);
+}
 t_cmd *tokens_to_commands(t_token *tokens)
 {
 	t_cmd	*ret;
 	t_cmd	*tmp;
-
+	char	*heredoc_del;
+	
 	ret = NULL;
 	while (tokens)
 	{
@@ -97,7 +109,10 @@ t_cmd *tokens_to_commands(t_token *tokens)
 			}
 			else
 			{
-				cmd_redir_fill(&(tmp->redir), tokens->type, tokens->next->value, tokens->next->is_quoted);
+				heredoc_del = tokens->next->value;
+				if (tokens->type == T_HEREDOC)
+					heredoc_del = remove_qoutes_if_needed(heredoc_del);
+				cmd_redir_fill(&(tmp->redir), tokens->type, heredoc_del, tokens->next->is_quoted);
 				tokens = tokens->next->next;
 			}
 		}
