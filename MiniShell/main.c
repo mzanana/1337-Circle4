@@ -62,7 +62,12 @@ int main(int ac, char **av, char **envp)
 			break;
 		tokens = tokenize_input(input);
 		if (!check_tokens(tokens, &input))
+		{
+			free(input);
+			gc_calloc(-1);
 			continue;
+		}
+		
 		head = tokens_to_commands(tokens);
 		if (!process_all_heredocs(head, env))
 		{
@@ -78,7 +83,10 @@ int main(int ac, char **av, char **envp)
 			cleanup_heredocs(head);
 			free_cmds(head);
 			status_set_tmp(last_status);
+			//free_cmds(head);
+			// status_set(last_status);
 		}
+		gc_calloc(-1);
 		free(input);
 	}
 	return (last_status);
