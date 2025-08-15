@@ -168,7 +168,7 @@ void print_parsed_commands(t_cmd *cmds)
                 printf("[%s] ", cmd->argv[i]);
                 i++;
             }
-            printf("\n");
+            printf("\n");/parser.c
         }
         else
             printf("argv: (empty)\n");
