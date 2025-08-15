@@ -20,7 +20,7 @@ char	*ft_substr2(char const *s, unsigned int start, size_t len)
 	return (ret);
 }
 
-int	ft_strcmp(const char *s1, const char *s2)
+int	ft_strcmp(char *s1, char *s2)
 {
 	size_t	i;
 
@@ -176,11 +176,13 @@ void	expand_into(char *dst, char *src, t_env *env)
 void	ft_expand(t_cmd *cmd, t_env *env)
 {
 	int		i;
+	int		j;
 	int		len;
 	char	*buf;
 
 	while (cmd)
 	{
+		t_redir	*redir = cmd->redir;
 		i = 0;
 		while (cmd->argv && cmd->argv[i])
 		{
@@ -192,6 +194,21 @@ void	ft_expand(t_cmd *cmd, t_env *env)
 			cmd->argv[i] = buf;
 			// printf("%s", cmd->argv[i]);
 			i++;
+		}
+		while (redir)
+		{
+			j = 0;
+			if (redir->filename && ft_strchr(redir->filename, '$'))
+			{
+				len = new_len(redir->filename, env);
+				buf = gc_calloc(sizeof(char) * len);
+				if (!buf)
+					return ;
+				expand_into(buf, redir->filename, env);
+				redir->filename = buf;
+				j++;
+			}
+			redir = redir->next;
 		}
 		cmd = cmd->next;
 	}
