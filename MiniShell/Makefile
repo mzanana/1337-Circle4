@@ -16,7 +16,7 @@ libft_rule:
 	$(MAKE) -s -C $(LIBFT_DIR)
 
 $(NAME): $(SRC_OBJ) $(LIBFT)
-	$(CC) $(SRC_OBJ) -L$(LIBFT_DIR) $(LINKERS) -o $(NAME)
+	@$(CC) $(SRC_OBJ) -L$(LIBFT_DIR) $(LINKERS) -o $(NAME)
 
 clean: 
 	$(RM) $(SRC_OBJ) $(OBJ_BONUS)
