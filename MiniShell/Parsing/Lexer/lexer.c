@@ -1,4 +1,4 @@
-#include "lexer.h"
+#include "../parsing_hf.h"
 
 bool	handle_operator_token(t_token **tokens, char *input, int *i)
 {
@@ -39,7 +39,7 @@ bool	handle_operator_token(t_token **tokens, char *input, int *i)
 	}
 	if (!value)
 		return (false);
-	new_token = token_new(value, type, false, false);
+	new_token = token_new(value, type, 0);
 	if (!new_token)
 		return (false);
 	token_add_back(tokens, new_token);
@@ -97,8 +97,10 @@ bool	collect_word_token(t_token **tokens, char *input, int *i)
 {
 	char	*buffer;
 	t_token	*new_token;
+	bool	quoted;
 
 	buffer = NULL;
+	quoted = 0;
 	while (input[*i])
 	{
 		if (is_space(input[*i]) || is_operator(input[*i]))
@@ -107,6 +109,7 @@ bool	collect_word_token(t_token **tokens, char *input, int *i)
 		{
 			if (!append_quoted_segment(&buffer, input, i))
 				return (false);
+			quoted = 1;
 		}
 		else
 		{
@@ -116,7 +119,7 @@ bool	collect_word_token(t_token **tokens, char *input, int *i)
 			(*i)++;
 		}
 	}
-	new_token = token_new(buffer, T_WORD, false, false);
+	new_token = token_new(buffer, T_WORD, quoted);
 	if (!new_token)
 		return (false);
 	token_add_back(tokens, new_token);
@@ -153,73 +156,4 @@ t_token	*tokenize_input(char *input)
 		}
 	}
 	return (tokens);
-}
-
-
-const char	*token_type_to_str(t_token_type type)
-{
-	if (type == T_WORD)
-		return ("T_WORD");
-	else if (type == T_PIPE)
-		return ("T_PIPE");
-	else if (type == T_REDIR_IN)
-		return ("T_REDIR_IN");
-	else if (type == T_REDIR_OUT)
-		return ("T_REDIR_OUT");
-	else if (type == T_APPEND)
-		return ("T_APPEND");
-	else
-		return ("T_HEREDOC");
-}
-
-void	print_tokens(t_token *tokens)
-{
-	int		i = 0;
-
-	while (tokens)
-	{
-		printf("Token[%d]: %-13s | Type: %-13s \n",
-			i++,
-			tokens->value,
-			token_type_to_str(tokens->type));
-		tokens = tokens->next;
-	}
-}
-
-int	main()
-{
-	char	*line;
-	t_token	*tokens;
-
-	while (1)
-	{
-		line = readline("minishell$ ");
-		if (!line)
-		{
-			printf("exit\n");
-			break ;
-		}
-		if (*line)
-			add_history(line);
-		tokens = tokenize_input(line);
-		
-		if (!tokens)
-		{
-			free(line);
-			gc_calloc(-1);
-			continue ;
-		}
-		if (!syntax_is_valid(tokens))
-		{
-			free(line);
-			gc_calloc(-1);
-			continue ;
-		}
-		print_tokens(tokens);
-		gc_calloc(-1);
-		free(line);
-		
-	}
-
-	return (0);
 }

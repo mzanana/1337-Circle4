@@ -1,4 +1,4 @@
-#include "lexer.h"
+#include "../parsing_hf.h"
 
 char    *ft_strndup(char *str, size_t n)
 {
@@ -31,7 +31,7 @@ int	is_space(char c)
 	return (c == ' ' || (c >= 9 && c <= 13));
 }
 
-t_token	*token_new(char *value, t_token_type type, bool was_quoted, bool was_single_quoted)
+t_token	*token_new(char *value, t_token_type type, bool quoted)
 {
 	t_token	*token;
 
@@ -40,8 +40,7 @@ t_token	*token_new(char *value, t_token_type type, bool was_quoted, bool was_sin
 		return (NULL);
 	token->value = value;
 	token->type = type;
-	token->was_quoted = was_quoted;
-	token->was_single_quoted = was_single_quoted;
+	token->is_quoted = quoted;
 	token->next = NULL;
 	return (token);
 }
@@ -63,20 +62,3 @@ void	token_add_back(t_token **head, t_token *new)
 	last->next = new;
 }
 
-void	free_tokens(t_token **tokens)
-{
-	t_token	*curr;
-	t_token	*next;
-
-	if (!tokens || !*tokens)
-		return ;
-	curr = *tokens;
-	while (curr)
-	{
-		next = curr->next;
-		// free(curr->value);
-		free(curr);
-		curr = next;
-	}
-	*tokens = NULL;
-}

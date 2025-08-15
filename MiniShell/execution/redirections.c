@@ -42,11 +42,11 @@ int	apply_heredoc(t_redir *redir)
 
 int	open_redirection_file(t_redir *redir)
 {
-	if (redir->type == R_INPUT)
+	if (redir->type == T_REDIR_IN)
 		return (open(redir->filename, O_RDONLY));
-	else if (redir->type == R_OUTPUT)
+	else if (redir->type == T_REDIR_OUT)
 		return (open(redir->filename, O_CREAT | O_WRONLY | O_TRUNC, 0644));
-	else if (redir->type == R_APPAND)
+	else if (redir->type == T_APPEND)
 		return (open(redir->filename, O_CREAT | O_WRONLY | O_APPEND, 0644));
 	return (-1);
 }
@@ -58,7 +58,7 @@ int	apply_file_redirection(t_redir *redir, int fd)
 		perror(redir->filename);
 		return (-1);
 	}
-	if (redir->type == R_INPUT)
+	if (redir->type == T_REDIR_IN)
 		dup2(fd, STDIN_FILENO);
 	else
 		dup2(fd, STDOUT_FILENO);
@@ -71,7 +71,7 @@ int	handle_redirections(t_redir *redir)
 
 	while (redir)
 	{
-		if (redir->type == R_HERDOC)//R_HEREDOC!
+		if (redir->type == T_HEREDOC)//R_HEREDOC!
 		{
 			if (apply_heredoc(redir) == -1)
 				return (-1);

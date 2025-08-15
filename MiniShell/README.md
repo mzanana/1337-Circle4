@@ -17,7 +17,14 @@
 		- [Pipelines](#pipelines)  
 	- [Shell Parameters](#shell-parameters)  
 ---
+## Processes
+
+---
+<!--<details>
+<summary>Processes</summary>
+-->
 # Processes
+
 
 We will take a look how to work with multiple processes inside our C programs and how to communicate between them.  
 
@@ -30,6 +37,7 @@ A process is an instance of a computer program that is being executed, the progr
 + **Negative value** `-1` if the creation of a child process was failed;  
 + **Zero** returned to the new child process which created;  
 + **Positive value** returned to the parent or caller.
+
 
 ```C
 #include<stdio.h>
@@ -298,7 +306,9 @@ The problem is from the `open` system call, on the manual of `open`  :
 	<img src="https://i.imgur.com/8AbcgQg.png" width="700">
 </p>
 So we need another process to open the same FIFO file for reading.  
-
+</details>
+  
+---
 
 # Shell & Bash
 
@@ -326,7 +336,6 @@ Those are the **steps** of Shell operation :
 + Parses the tokens into simple and compound commands;   
 + Performs the expanded tokens into the lists of filenames and commands and arguments;  
 + **Executes the command.**  
-
 
 ## Quoting  
 
