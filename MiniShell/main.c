@@ -56,6 +56,7 @@ int main(int ac, char **av, char **envp)
 	env = init_env_list(envp);
 	while (1)
 	{
+		g_herdoc_stop = false;
 		input = ft_readline("minishell$ ");
 		if (!input)
 			break;
