@@ -70,7 +70,7 @@ char    *read_heredoc(char *delimiter, bool expand, t_env *env)
     
     tmp_path = make_tempfile();
     if (!tmp_path)
-    return (NULL);
+        return (NULL);
     fd = open(tmp_path, O_WRONLY | O_CREAT | O_TRUNC, 0644);
     if (fd < 0)
     {
@@ -129,7 +129,7 @@ bool    process_all_heredocs(t_cmd *cmds, t_env *env)
             {
                 tmp_path = read_heredoc(redir->filename, !redir->quoted, env);
                 if (!tmp_path)
-                return (false);
+                    return (false);
                 redir->is_temp = true;
                 redir->filename = tmp_path;
             }
@@ -137,5 +137,6 @@ bool    process_all_heredocs(t_cmd *cmds, t_env *env)
         }
         cmd = cmd->next;
     }
+
     return (true);
 }
