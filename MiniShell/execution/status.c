@@ -13,7 +13,7 @@ static void	status_main(int action, int *value)
 		last_status = *value;
 }
 
-int	status_get(void)
+int	status_get_tmp(void)
 {
 	int	value;
 
@@ -21,7 +21,7 @@ int	status_get(void)
 	return (value);
 }
 
-void	status_set(int value)
+void	status_set_tmp(int value)
 {
 	status_main(SET, &value);
 }
