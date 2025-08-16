@@ -37,6 +37,7 @@ int	execute_pipeline(t_cmd *cmds, t_env **env)
 
 	in_fd = 0;
 	last_pid = 0;
+	signal(SIGINT, SIG_IGN);
 	while (cmds)
 	{
 		create_pipe_if_needed(cmds, fd);
