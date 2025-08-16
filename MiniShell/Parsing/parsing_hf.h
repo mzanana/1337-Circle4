@@ -3,13 +3,21 @@
 
 # include <stdio.h>
 # include <stdlib.h>
+# include <unistd.h>
 # include <readline/readline.h>
 # include <readline/history.h>
 # include <stdbool.h>
 # include <stddef.h>
 # include <unistd.h>
 # include "../Libft/libft.h"
+# include <fcntl.h>
+# include <sys/wait.h>
+# include <sys/stat.h>
+# include <signal.h>
+# include <sys/ioctl.h> 
 
+
+extern bool	g_herdoc_stop;
 // Lexer struct : 
 //
 typedef	enum e_token_type
@@ -38,6 +46,7 @@ typedef struct s_redir
 	t_token_type		type;
 	char		*filename;
 	bool		quoted;
+	bool	is_temp;
 	struct s_redir	*next;
 }	t_redir;
 
@@ -79,4 +88,28 @@ void print_parsed_commands(t_cmd *cmds);
 t_cmd *tokens_to_commands(t_token *tokens);
 void ft_expand (t_cmd *command, t_env *env);
 bool check_tokens(t_token *tokens, char **line);
+
+void	expand_into(char *dst, char *src, t_env *env);
+bool    process_all_heredocs(t_cmd *cmds, t_env *env);
+void    cleanup_heredocs(t_cmd *cmd);
+int	new_len(char *s, t_env *env);
+int	ft_strcmp(char *s1, char *s2);
+
+
+
+void	status_set(int value);
+int	status_get_tmp(void);
+
+char	*env_val(char *key, t_env *env);
+char	*env_val(char *key, t_env *env);
+char	*env_val(char *key, t_env *env);
+int	new_len(char *s, t_env *env);
+char	*ft_substr2(char const *s, unsigned int start, size_t len);
+// int	ft_strcmp(const char *s1, const char *s2);
+int var_start(char c);
+int var_middle(char c);
+int	quote_checker(char c, int *sq, int *dq, int *cnt);
+char *expand_it(char *str, t_env *env);
+char	*remove_qoutes_if_needed(char *s, bool *quoted);
+
 #endif

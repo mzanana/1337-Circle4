@@ -50,7 +50,7 @@ void	cmd_redir_fill(t_redir **redir, t_token_type type, char * value, bool is_qu
 {
 	t_redir	*curr;
 	t_redir	*holder;
-
+	
 	if (!*redir)
 	{
 		*redir = redir_maker(type, value, is_quoted);
@@ -66,7 +66,7 @@ void	cmd_redir_fill(t_redir **redir, t_token_type type, char * value, bool is_qu
 void cmd_add_back(t_cmd **head, t_cmd *new)
 {
 	t_cmd *tmp;
-
+	
 	if (!*head)
 	{
 		*head = new;
@@ -79,11 +79,42 @@ void cmd_add_back(t_cmd **head, t_cmd *new)
 	return ;
 }
 
+char	*remove_qoutes_if_needed(char *s, bool *quoted)
+{
+	char	*res;
+	char	qoute;
+	int	i;
+	int	j;
+
+	i = 0;
+	j = 0;
+	res = gc_calloc(ft_strlen(s) + 1);
+	if (!res || !s)
+		return (NULL);
+	while (s[i])
+	{
+		if (s[i] == '"' || s[i] == '\'')
+		{
+			qoute = s[i++];
+			*quoted = true;
+			while (s[i] &&s[i] != qoute)
+				res[j++] = s[i++];
+			if (s[i] == qoute)
+				i++;
+		}
+		else
+			res[j++] = s[i++];
+	}
+	res[j] = '\0';
+	return (res);
+}
 t_cmd *tokens_to_commands(t_token *tokens)
 {
 	t_cmd	*ret;
 	t_cmd	*tmp;
-
+	char	*heredoc_del;
+	bool	is_quoted;
+	
 	ret = NULL;
 	while (tokens)
 	{
@@ -97,7 +128,11 @@ t_cmd *tokens_to_commands(t_token *tokens)
 			}
 			else
 			{
-				cmd_redir_fill(&(tmp->redir), tokens->type, tokens->next->value, tokens->next->is_quoted);
+				is_quoted = false;
+				heredoc_del = tokens->next->value;
+				if (tokens->type == T_HEREDOC)
+					heredoc_del = remove_qoutes_if_needed(heredoc_del, &is_quoted);
+				cmd_redir_fill(&(tmp->redir), tokens->type, heredoc_del, tokens->next->is_quoted);
 				tokens = tokens->next->next;
 			}
 		}
@@ -133,7 +168,7 @@ void print_parsed_commands(t_cmd *cmds)
                 printf("[%s] ", cmd->argv[i]);
                 i++;
             }
-            printf("\n");
+            printf("\n");// parser.c
         }
         else
             printf("argv: (empty)\n");
