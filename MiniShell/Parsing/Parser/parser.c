@@ -58,7 +58,7 @@ void	cmd_redir_fill(t_redir **redir, t_token_type type, char * value, bool is_qu
 	}
 	curr = *redir;
 	while (curr->next)
-	curr = curr->next;
+		curr = curr->next;
 	holder = redir_maker(type, value, is_quoted);
 	curr->next = holder;
 	return ;
@@ -74,7 +74,7 @@ void cmd_add_back(t_cmd **head, t_cmd *new)
 	}
 	tmp = *head;
 	while (tmp->next)
-	tmp = tmp->next;
+		tmp = tmp->next;
 	tmp->next = new;
 	return ;
 }
@@ -168,7 +168,7 @@ void print_parsed_commands(t_cmd *cmds)
                 printf("[%s] ", cmd->argv[i]);
                 i++;
             }
-            printf("\n");/parser.c
+            printf("\n");// parser.c
         }
         else
             printf("argv: (empty)\n");

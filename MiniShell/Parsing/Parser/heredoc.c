@@ -6,7 +6,7 @@ void	sigint_handler_herdoc(int signal)
 {
 	(void)signal;
 	g_herdoc_stop = true;
-	status_set_tmp(130);
+	status_set(130);
 	rl_replace_line("", 0);
 	rl_on_new_line();
 	rl_redisplay();
@@ -25,24 +25,28 @@ char    *expand_heredoc_line(char *line, t_env *env)
     expand_into(buf, line, env);
     return (ft_strjoin(buf, "\n"));
 }
-char    *make_tempfile(void)
+char *make_tempfile(void)
 {
-    char    *base = "/tmp/minishell_hd_";
-    char    *random;
-    char    *full;
-    int fd;
-    
-    random = ft_itoa(rand());
-    full = ft_strjoin(base, random);
-    free(random);
-    fd = open(full, O_CREAT | O_EXCL, 0644);
-    if (fd < 0)
-    {
-        free(full);
-        return (NULL);
-    }
-    close(fd);
-    return (full);
+	char *random;
+	char *full;
+	int fd;
+	int i;
+
+	fd = -1;
+	i = 1337;
+	while (fd < 0 && i < INT_MAX)
+	{
+		random = ft_itoa(i);
+		full = ft_strjoin("/tmp/minishell_hd_", random);
+		free(random);
+		fd = open(full, O_CREAT | O_EXCL | O_WRONLY, 0644);
+		if (fd > 0)
+			break;
+		free(full);
+		i++;
+	}
+	close(fd);
+	return (full);
 }
 
 void    cleanup_heredocs(t_cmd *cmd)
@@ -103,9 +107,9 @@ char    *read_heredoc(char *delimiter, bool expand, t_env *env)
             break ;
         }
         if (expand)
-        expanded = expand_heredoc_line(line, env);
+            expanded = expand_heredoc_line(line, env);
         else
-        expanded = ft_strjoin(line, "\n");
+            expanded = ft_strjoin(line, "\n");
         write(fd, expanded, ft_strlen(expanded));
         free(line);
         free(expanded);
@@ -113,13 +117,11 @@ char    *read_heredoc(char *delimiter, bool expand, t_env *env)
     close(fd);
     return (tmp_path);
 }
-bool    process_all_heredocs(t_cmd *cmds, t_env *env)
+bool    process_all_heredocs(t_cmd *cmd, t_env *env)
 {
-    t_cmd   *cmd;
     t_redir *redir;
     char    *tmp_path;
     
-    cmd = cmds;
     while (cmd)
     {
         redir = cmd->redir;

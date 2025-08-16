@@ -97,7 +97,7 @@ int	ft_strcmp(char *s1, char *s2);
 
 
 
-void	status_set_tmp(int value);
+void	status_set(int value);
 int	status_get_tmp(void);
 
 char	*env_val(char *key, t_env *env);
@@ -109,6 +109,7 @@ char	*ft_substr2(char const *s, unsigned int start, size_t len);
 int var_start(char c);
 int var_middle(char c);
 int	quote_checker(char c, int *sq, int *dq, int *cnt);
-
+char *expand_it(char *str, t_env *env);
+char	*remove_qoutes_if_needed(char *s, bool *quoted);
 
 #endif

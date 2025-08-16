@@ -6,8 +6,8 @@ void	handle_parent_after_fork(t_cmd *cmd, int *in_fd, int fd[2])
 		close(*in_fd);
 	if (cmd->next)
 	{
-		close(fd[1]);// we don't write in parent
-		*in_fd = fd[0];// save read for the next cmd
+		close(fd[1]);
+		*in_fd = fd[0];// save read for the next cmd/child
 	}
 }
 
@@ -37,6 +37,7 @@ int	execute_pipeline(t_cmd *cmds, t_env **env)
 
 	in_fd = 0;
 	last_pid = 0;
+	signal(SIGINT, SIG_IGN);
 	while (cmds)
 	{
 		create_pipe_if_needed(cmds, fd);

@@ -1,16 +1,22 @@
 #include "exec.h"
 
+void	setup_child_signals(void)
+{
+	signal(SIGINT, SIG_DFL);
+	signal(SIGQUIT, SIG_DFL);
+}
+
 void	setup_pipes_child(int in_fd, t_cmd *cmd, int pipefd[2])
 {
 	if (in_fd != 0)
 	{
-		dup2(in_fd, STDIN_FILENO);
+		dup2(in_fd, STDIN_FILENO);// This connects stdin of this child to the previous pipe’s read-end
 		close(in_fd);
 	}
 	if (cmd->next)
 	{
 		close(pipefd[0]);
-		dup2(pipefd[1], STDOUT_FILENO);
+		dup2(pipefd[1], STDOUT_FILENO);// This connects stdout of this child to the current pipe’s write-end
 		close(pipefd[1]);
 	}
 }
@@ -26,6 +32,7 @@ void	exec_builtin_child(t_cmd *cmd, t_env **env)
 void	pipe_child(t_cmd *cmd, int in_fd, int pipefd[2], t_env **env)
 {
 	char (*path), (**real_envp);
+	setup_child_signals();
 	setup_pipes_child(in_fd, cmd, pipefd);
 	if (handle_redirections(cmd->redir))
 		exit(1);

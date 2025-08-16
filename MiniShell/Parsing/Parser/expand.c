@@ -52,8 +52,8 @@ void	expand_into(char *dst, char *src, t_env *env)
 		{
 			if (src[j + 1] == '?')
 			{
+				write_val(dst, &i, ft_itoa(status_get()));
 				j += 2;
-				write_val(dst, &i, "0");
 			}
 			else 
 			{
@@ -80,6 +80,7 @@ char *expand_it(char *str, t_env *env)
 	if (!buff)
 		return NULL;
 	expand_into(buff, str, env);
+	buff = remove_qoutes_if_needed(buff, (bool *)&len);
 	return (buff);
 }
 
@@ -87,42 +88,22 @@ char *expand_it(char *str, t_env *env)
 void	ft_expand(t_cmd *cmd, t_env *env)
 {
 	int		i;
-	// int		j;
-	// int		len;
-	// char	*buf;
-
-	// while (cmd)
-	// {
-	// 	t_redir	*redir = cmd->redir;
-	// 	i = 0;
-	// 	while (cmd->argv && cmd->argv[i])
+	t_redir *red_walk;
 
 	while (cmd)
 	{
+		red_walk = cmd->redir;
+		while (red_walk)
+		{
+			if (red_walk->type != T_HEREDOC)
+				red_walk->filename = expand_it(red_walk->filename, env);
+			red_walk = red_walk->next;
+		}
 		i = -1;
 		while (cmd->argv && cmd->argv[++i])
 			cmd->argv[i] = expand_it(cmd->argv[i], env);
-		while (cmd->redir)
-		{
-			if (!cmd->redir->quoted)
-				cmd->redir->filename = expand_it(cmd->redir->filename, env);
-			cmd->redir = cmd->redir->next;
-		}
-		// while (redir)
-		// {
-		// 	j = 0;
-		// 	if (redir->filename && ft_strchr(redir->filename, '$'))
-		// 	{
-		// 		len = new_len(redir->filename, env);
-		// 		buf = gc_calloc(sizeof(char) * len);
-		// 		if (!buf)
-		// 			return ;
-		// 		expand_into(buf, redir->filename, env);
-		// 		redir->filename = buf;
-		// 		j++;
-		// 	}
-		// 	redir = redir->next;
-		// }
+
 		cmd = cmd->next;
 	}
+
 }
