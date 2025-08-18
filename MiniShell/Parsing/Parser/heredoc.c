@@ -2,6 +2,34 @@
 
 bool	g_herdoc_stop = false;
 
+char	*ft_strjoin2(char const *s1, char const *s2)
+{
+	char	*ret;
+	size_t	index;
+	size_t	helper;
+	size_t	total;
+
+	total = 0;
+	if (s1)
+		total += ft_strlen(s1);
+	if (s2)
+		total += ft_strlen(s2);
+	ret = gc_calloc ((total + 1) * sizeof(char));
+	if (!ret)
+		return (NULL);
+	index = 0;
+	while (s1 && s1[index] && index < ft_strlen(s1))
+	{
+		ret[index] = s1[index];
+		index++;
+	}
+	helper = 0;
+	while (s2 && s2[helper] && index < total)
+		ret[index++] = s2[helper++];
+	ret[index] = '\0';
+	return (ret);
+}
+
 void	sigint_handler_herdoc(int signal)
 {
 	(void)signal;
@@ -23,7 +51,7 @@ char    *expand_heredoc_line(char *line, t_env *env)
     if (!buf)
     return (NULL);
     expand_into(buf, line, env);
-    return (ft_strjoin(buf, "\n"));
+    return (ft_strjoin2(buf, "\n"));
 }
 char *make_tempfile(void)
 {
@@ -37,12 +65,12 @@ char *make_tempfile(void)
 	while (fd < 0 && i < INT_MAX)
 	{
 		random = ft_itoa(i);
-		full = ft_strjoin("/tmp/minishell_hd_", random);
+		full = ft_strjoin2("/tmp/minishell_hd_", random);
 		free(random);
 		fd = open(full, O_CREAT | O_EXCL | O_WRONLY, 0644);
 		if (fd > 0)
 			break;
-		free(full);
+		// free(full);
 		i++;
 	}
 	close(fd);
@@ -60,6 +88,7 @@ void    cleanup_heredocs(t_cmd *cmd)
         {
             if (r->type == T_HEREDOC && r->is_temp)
             unlink(r->filename);
+            //free(r->filename);
             r = r->next;
         }
         cmd = cmd->next;
@@ -79,7 +108,7 @@ char    *read_heredoc(char *delimiter, bool expand, t_env *env)
     if (fd < 0)
     {
         perror("heredoc");
-        free(tmp_path);
+        // free(tmp_path);
         return (NULL);
     }
     signal(SIGINT, sigint_handler_herdoc);
@@ -98,7 +127,7 @@ char    *read_heredoc(char *delimiter, bool expand, t_env *env)
             free(line);
             close(fd);
             unlink(tmp_path);
-            free(tmp_path);
+            // free(tmp_path);
             return (NULL);
         }
         if (ft_strcmp(line, delimiter) == 0)
@@ -109,10 +138,10 @@ char    *read_heredoc(char *delimiter, bool expand, t_env *env)
         if (expand)
             expanded = expand_heredoc_line(line, env);
         else
-            expanded = ft_strjoin(line, "\n");
+            expanded = ft_strjoin2(line, "\n");
         write(fd, expanded, ft_strlen(expanded));
         free(line);
-        free(expanded);
+        // free(expanded);
     }
     close(fd);
     return (tmp_path);
