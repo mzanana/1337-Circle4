@@ -76,14 +76,15 @@ char *expand_it(char *str, t_env *env)
 {
 	int len;
 	char *buff;
+	char *ret;
 	
 	len = new_len(str, env);
 	buff = gc_calloc(sizeof(char) * len);
 	if (!buff)
 		return NULL;
 	expand_into(buff, str, env);
-	buff = remove_qoutes_if_needed(buff, (bool *)&len);
-	return (buff);
+	ret = remove_qoutes_if_needed(buff, (bool *)&len);
+	return (ret);
 }
 
 
