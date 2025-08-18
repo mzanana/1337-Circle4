@@ -61,10 +61,7 @@ int main(int ac, char **av, char **envp)
 		g_herdoc_stop = false;
 		input = ft_readline("minishell$ ");
 		if (!input)
-		{
-			free_env_list(env);
 			break;
-		}
 		tokens = tokenize_input(input);
 		if (!check_tokens(tokens, &input))
 		{
