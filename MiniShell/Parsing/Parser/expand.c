@@ -52,7 +52,9 @@ void	expand_into(char *dst, char *src, t_env *env)
 		{
 			if (src[j + 1] == '?')
 			{
-				write_val(dst, &i, ft_itoa(status_get()));
+				char	*status_str = ft_itoa(status_get());
+				write_val(dst, &i, status_str);
+				free(status_str);
 				j += 2;
 			}
 			else 
