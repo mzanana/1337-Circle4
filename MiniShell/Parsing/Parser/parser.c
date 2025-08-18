@@ -123,7 +123,13 @@ t_cmd *tokens_to_commands(t_token *tokens)
 		{
 			if (tokens->type == T_WORD)
 			{
-				cmd_argv_fill(tmp, tokens->value);
+				if (!tokens->is_quoted && ft_strchr(tokens->value, '*'))
+				{
+					if (!join_current_dir(tmp, tokens->value))
+						cmd_argv_fill(tmp, tokens->value);					
+				}
+				else
+					cmd_argv_fill(tmp, tokens->value);
 				tokens = tokens->next;
 			}
 			else
@@ -132,7 +138,16 @@ t_cmd *tokens_to_commands(t_token *tokens)
 				heredoc_del = tokens->next->value;
 				if (tokens->type == T_HEREDOC)
 					heredoc_del = remove_qoutes_if_needed(heredoc_del, &is_quoted);
-				cmd_redir_fill(&(tmp->redir), tokens->type, heredoc_del, tokens->next->is_quoted);
+				if (!tokens->is_quoted && ft_strchr(heredoc_del, '*'))
+				{
+					char *tes = join_current_dir_redi(heredoc_del);
+					if (tes)
+						cmd_redir_fill(&(tmp->redir), tokens->type, tes, tokens->next->is_quoted);					
+					else
+						write (1, "bash: ambiguous redirect\n", 25);
+				}
+				else
+					cmd_redir_fill(&(tmp->redir), tokens->type, heredoc_del, tokens->next->is_quoted);
 				tokens = tokens->next->next;
 			}
 		}

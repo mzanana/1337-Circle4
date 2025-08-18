@@ -15,6 +15,7 @@
 # include <sys/stat.h>
 # include <signal.h>
 # include <sys/ioctl.h> 
+# include <dirent.h>
 
 
 extern bool	g_herdoc_stop;
@@ -111,5 +112,17 @@ int var_middle(char c);
 int	quote_checker(char c, int *sq, int *dq, int *cnt);
 char *expand_it(char *str, t_env *env);
 char	*remove_qoutes_if_needed(char *s, bool *quoted);
+
+
+bool	join_current_dir(t_cmd *cmd, char *patern);
+bool	wildcmp(char *str, char *pattern);
+bool	_wildcmp_help(char *str, char *pattern);
+bool	ends_with_substr(char *str, char *end, size_t i);
+char	*ft_strstr(char *str, char *little, size_t z);
+
+char	*join_current_dir_redi(char *patern);
+char	*get_single_file_or_null(char *patern);
+int	asterisk_in_filename(char *target, t_cmd *cmd, t_token *tok);
+void	cmd_argv_fill(t_cmd *cmd, char *value);
 
 #endif
