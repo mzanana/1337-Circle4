@@ -141,18 +141,12 @@ t_token	*tokenize_input(char *input)
 		if (is_operator(input[i]))
 		{
 			if (!handle_operator_token(&tokens, input, &i))
-			{
-				write(2, "lexer error: invalid operator\n", 31);
 				return (NULL);
-			}
 		}
 		else
 		{
 			if (!collect_word_token(&tokens, input, &i))
-			{
-				write(2, "lexer error: failed to collect word\n", 37);
 				return (NULL);
-			}
 		}
 	}
 	return (tokens);
