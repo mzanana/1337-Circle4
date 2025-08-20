@@ -1,49 +1,49 @@
 #include "../exec.h"
 
-int	_is_var_char(int c)
-{
-	return (ft_isalnum(c) || c == '_');
-}
+// int	_is_var_char(int c)
+// {
+// 	return (ft_isalnum(c) || c == '_');
+// }
 
-void	env_add_back(t_env **env, t_env *new)
-{
-	t_env	*tmp;
+// void	env_add_back(t_env **env, t_env *new)
+// {
+// 	t_env	*tmp;
 
-	if (!*env)
-	{
-		*env = new;
-		return ;
-	}
-	tmp = *env;
-	while (tmp->next)
-		tmp = tmp->next;
-	tmp->next = new;
-}
+// 	if (!*env)
+// 	{
+// 		*env = new;
+// 		return ;
+// 	}
+// 	tmp = *env;
+// 	while (tmp->next)
+// 		tmp = tmp->next;
+// 	tmp->next = new;
+// }
 
-t_env	*env_new(char *key, char *value)
-{
-	t_env	*new;
+// t_env	*env_new(char *key, char *value)
+// {
+// 	t_env	*new;
 
-	new = malloc(sizeof(t_env));
-	if (!new)
-		return (NULL);
-	new->key = key;
-	new->value = value;
-	new->next = NULL;
-	return (new);
-}
+// 	new = malloc(sizeof(t_env));
+// 	if (!new)
+// 		return (NULL);
+// 	new->key = key;
+// 	new->value = value;
+// 	new->next = NULL;
+// 	return (new);
+// }
 
-void	print_export_list(t_env *env)
-{
-	while(env)
-	{
-		if (env->value)
-			printf("declare -x %s=\"%s\"\n", env->key, env->value);
-		else
-			printf("declare -x %s\n", env->key);
-		env = env->next;
-	}
-}
+// void	print_export_list(t_env *env)
+// {
+// 	while (env)
+// 	{
+// 		if (env->value)
+// 			printf("declare -x %s=\"%s\"\n", env->key, env->value);
+// 		else
+// 			printf("declare -x %s\n", env->key);
+// 		env = env->next;
+// 	}
+// }
 
 t_env	*find_new(t_env *env, char *key)
 {
@@ -56,12 +56,12 @@ t_env	*find_new(t_env *env, char *key)
 	return (NULL);
 }
 
-void	print_export_error(char *arg)
-{
-	write(2, "bash: export: `", 15);
-	write(2, arg, ft_strlen(arg));
-	write(2, "': not a valid identifier\n", 26);
-}
+// void	print_export_error(char *arg)
+// {
+// 	log_err("minishell: export: `");
+// 	log_err(arg);
+// 	log_err("': not a valid identifier\n");
+// }
 
 int	check_valide_key(char *arg)
 {
@@ -85,7 +85,7 @@ int	check_valide_key(char *arg)
 	return (0);
 }
 
-void apply_env(char *key, char *value, t_env **env, char *eq)
+void	apply_env(char *key, char *value, t_env **env, char *eq)
 {
 	t_env	*do_exist;
 

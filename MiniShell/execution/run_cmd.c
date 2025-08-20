@@ -1,26 +1,5 @@
 #include "exec.h"
 
-void	skip_empty_cmd(t_cmd *cmd)
-{
-	int	i;
-	int	j;
-
-	if (!cmd->argv)
-		return ;
-	i = 0;
-	while (cmd->argv[i] && cmd->argv[i][0] == '\0')
-		i++;
-	if (!cmd->argv[i])
-	{
-		cmd->argv[0] = NULL;
-		return ;
-	}
-	j = 0;
-	while (cmd->argv[i])
-		cmd->argv[j++] = cmd->argv[i++];
-	cmd->argv[j] = NULL;
-}
-
 void	save_stdio(int *in, int *out)
 {
 	*in = dup(STDIN_FILENO);
@@ -53,7 +32,6 @@ int	redir_with_no_cmd(t_redir *redir)
 int	run_command(t_cmd *cmds, t_env **env)
 {
 	int (saved_in), (saved_out);
-	skip_empty_cmd(cmds);
 	if (!cmds->argv || !cmds->argv[0])
 	{
 		if (!cmds->next)

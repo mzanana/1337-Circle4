@@ -46,6 +46,9 @@ int	ft_echo(char **argv);
 int	ft_pwd(void);
 int	ft_env(char **argv, t_env *env);
 int	ft_export(char **argv, t_env **env);
+void	print_export_error(char *arg);
+int	_is_var_char(int c);
+void	print_export_list(t_env *env);
 int	ft_unset(char **argv, t_env **env);
 int	ft_exit(char **argv, int last_status);
 int	ft_cd(char **argv);
@@ -88,6 +91,5 @@ void	status_set(int value);
 int	run_command(t_cmd *cmds, t_env **env);
 char	**env_to_envp(t_env *env);
 void	free_envp_array(char **envp);
-// t_redir	*new_redir(t_redir_type type, char *filename);
 void	log_err(char *msg);
 #endif

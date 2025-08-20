@@ -10,13 +10,13 @@ void	setup_pipes_child(int in_fd, t_cmd *cmd, int pipefd[2])
 {
 	if (in_fd != 0)
 	{
-		dup2(in_fd, STDIN_FILENO);// This connects stdin of this child to the previous pipe’s read-end
+		dup2(in_fd, STDIN_FILENO);
 		close(in_fd);
 	}
 	if (cmd->next)
 	{
 		close(pipefd[0]);
-		dup2(pipefd[1], STDOUT_FILENO);// This connects stdout of this child to the current pipe’s write-end
+		dup2(pipefd[1], STDOUT_FILENO);
 		close(pipefd[1]);
 	}
 }
@@ -43,7 +43,7 @@ void	pipe_child(t_cmd *cmd, int in_fd, int pipefd[2], t_env **env)
 	path = find_cmd_path(cmd->argv[0], *env);
 	if (!path)
 	{
-		print_err("bash: ", cmd->argv[0], ": command not found\n");
+		print_err("minishell: ", cmd->argv[0], ": command not found\n");
 		exit(127);
 	}
 	real_envp = env_to_envp(*env);

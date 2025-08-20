@@ -161,6 +161,7 @@ t_cmd *tokens_to_commands(t_token *tokens, t_env *env)
 					if (!join_current_dir(tmp, tokens->value))
 						cmd_argv_fill(tmp, tokens->value);					
 				}
+				else if (tokens->value[0] == '\0' && !tokens->is_quoted);
 				else
 					cmd_argv_fill(tmp, tokens->value);
 				tokens = tokens->next;
@@ -181,7 +182,10 @@ t_cmd *tokens_to_commands(t_token *tokens, t_env *env)
 					if (tes)
 						cmd_redir_fill(&(tmp->redir), tokens->type, tes, tokens->next->is_quoted);					
 					else
-						write (1, "bash: ambiguous redirect\n", 25);
+					{
+						write (1, "minishell: ambiguous redirect\n", 30);
+						return (NULL);
+					}
 				}
 				else
 					cmd_redir_fill(&(tmp->redir), tokens->type, heredoc_del, tokens->next->is_quoted);

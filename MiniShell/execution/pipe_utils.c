@@ -15,18 +15,18 @@ int	check_executable(char *path)
 	{
 		if (S_ISDIR(st.st_mode))
 		{
-			print_err("bash: ", path, ": Is a directory\n");
+			print_err("minishell: ", path, ": Is a directory\n");
 			exit(126);
 		}
 		if (access(path, X_OK) == -1)
 		{
-			print_err("bash: ", path, ": Permission denied\n");
+			print_err("minishell: ", path, ": Permission denied\n");
 			exit(126);
 		}
 	}
 	else
 	{
-		print_err("bash: ", path, ": No such file or directory\n");
+		print_err("minishell: ", path, ": No such file or directory\n");
 		exit(127);
 	}
 	return (0);

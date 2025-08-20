@@ -4,7 +4,7 @@ int	ft_env(char **argv, t_env *env)
 {
 	if (argv[1])
 	{
-		write (2, "bash: env: too many arguments\n", 31);
+		log_err("minishell: env: too many arguments\n");
 		return (1);
 	}
 	while (env)

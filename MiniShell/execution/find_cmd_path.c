@@ -37,7 +37,8 @@ char	*get_env_value(t_env *env, char *key)
 	}
 	return (NULL);
 }
-static char	*search_in_paths(char **paths, char *cmd)
+
+char	*search_in_paths(char **paths, char *cmd)
 {
 	int		i;
 	char	*full_path;
@@ -69,7 +70,7 @@ char	*find_cmd_path(char *cmd, t_env *env)
 	if (!cmd)
 		return (NULL);
 	path_value = get_env_value(env, "PATH");
-	if (!path_value || ft_strchr(cmd, '/'))
+	if (!path_value || ft_strchr(cmd, '/') || ft_strlen(cmd) == 0)
 		return (ft_strdup(cmd));
 	paths = ft_split(path_value, ':');
 	if (!paths)

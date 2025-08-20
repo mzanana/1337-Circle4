@@ -48,11 +48,19 @@ char *ft_readline (const char *str)
 
 bool check_tokens(t_token *tokens, char **line)
 {
-	if (!tokens || !syntax_is_valid(tokens))
+	if (!tokens)
 	{
 		free(*line);
 		*line = NULL;
 		gc_calloc(-1);
+		return 0;
+	}
+	if (!syntax_is_valid(tokens))
+	{
+		free(*line);
+		*line = NULL;
+		gc_calloc(-1);
+		status_set(2);
 		return 0;
 	}
 	return 1;

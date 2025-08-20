@@ -5,16 +5,15 @@ void	print_unexpected_token(const char *token)
 	size_t	token_len;
 
 	token_len = ft_strlen(token);
-	write(2, "bash: syntax error near unexpected token `", 42);
+	write(2, "minishell: syntax error near unexpected token `", 47);
 	write(2, token, token_len);
 	write(2, "'\n", 2);
 }
 
 void	print_unexpected_newline(void)
 {
-	write(2, "bash: syntax error near unexpected token `newline`\n", 52);
+	write(2, "minishell: syntax error near unexpected token `newline`\n", 57);
 }
-
 bool	is_redirection(t_token_type type)
 {
 	return (type == T_REDIR_IN || type == T_REDIR_OUT || type == T_APPEND || type == T_HEREDOC);

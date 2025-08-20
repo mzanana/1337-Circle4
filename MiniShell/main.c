@@ -6,7 +6,6 @@ int main(int ac, char **av, char **envp)
 	(void)ac;
 	(void)av;
 
-	int 	last_status= 0;
 	char 	*input;
 	t_token *tokens;
 	t_cmd	*head;
@@ -23,12 +22,18 @@ int main(int ac, char **av, char **envp)
 		tokens = tokenize_input(input);
 		if (!check_tokens(tokens, &input))
 		{
-			status_set(2);
-			free(input);
+			free(input);// double free maybe !!!!!!!!
 			gc_calloc(-1);
 			continue;
 		}
 		head = tokens_to_commands(tokens, env);
+		if (!head)
+		{
+			free(input);
+			status_set(1);
+			gc_calloc(-1);
+			continue;
+		}
 		if (!process_all_heredocs(head, env))
 		{
 			free(input);
@@ -37,13 +42,12 @@ int main(int ac, char **av, char **envp)
 		}
 		if (head)
 		{
-			last_status = run_command(head, &env);
+			status_set(run_command(head, &env));
 			cleanup_heredocs(head);
-			status_set(last_status);
 		}
 		gc_calloc(-1);
 		free(input);
 	}
 	free_env_list(env);
-	return (last_status);
+	return (status_get());
 }

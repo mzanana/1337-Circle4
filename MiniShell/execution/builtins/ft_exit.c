@@ -7,6 +7,8 @@ int	is_numeric(char *str)
 	i = 0;
 	if (!str)
 		return (0);
+	if (ft_strlen(str) == 0)
+		return (0);
 	if (str[i] == '+' || str[i] == '-')
 		i++;
 	while (str[i])
@@ -28,12 +30,12 @@ int	ft_exit(char **argv, int last_status)
 		exit(last_status);
 	if (!is_numeric(argv[1]))
 	{
-		log_err("bash: exit: numeric argument required\n");
+		log_err("minishell: exit: numeric argument required\n");
 		exit(2);
 	}
 	if (argv[2])
 	{
-		log_err("bash: exit: too many arguments\n");
+		log_err("minishell: exit: too many arguments\n");
 		return (1);
 	}
 	code = ft_atoi(argv[1]);

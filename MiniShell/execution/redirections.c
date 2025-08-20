@@ -17,6 +17,7 @@ int	apply_file_redirection(t_redir *redir, int fd)
 {
 	if (fd == -1)
 	{
+		log_err("minishell: ");
 		perror(redir->filename);
 		return (-1);
 	}

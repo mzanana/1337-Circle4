@@ -32,6 +32,7 @@ void	remove_env_var(t_env **env, char *key)
 		curr = curr->next;
 	}
 }
+
 int	ft_unset(char **argv, t_env **env)
 {
 	int	i;

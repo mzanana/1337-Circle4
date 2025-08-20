@@ -87,7 +87,7 @@ bool	append_quoted_segment(char **buffer, char *input, int *i)
 		}
 		(*i)++;
 	}
-	write(2, "bash: unexpected EOF while looking for matching `", 49);
+	write(2, "minishell: unexpected EOF while looking for matching `", 54);
 	write(2, &quote, 1);
 	write(2, "'\n", 2);
 	return (false);
