@@ -58,4 +58,3 @@ pid_t	fork_and_check(void)
 	}
 	return (pid);
 }
-

@@ -1,41 +1,8 @@
 #include "exec.h"
 
-void	ft_free_split(char **arr)
-{
-	int	i;
-
-	if (!arr)
-		return;
-	i = 0;
-	while (arr[i])
-	{
-		free(arr[i]);
-		i++;
-	}
-	free(arr);
-}
-
-void	free_cmds(t_cmd *cmd)
-{
-	while (cmd)
-	{
-		t_cmd	*next = cmd->next;
-		ft_free_split(cmd->argv);
-		while(cmd->redir)
-		{
-			t_redir	*rd_next = cmd->redir->next;
-			free(cmd->redir->filename);
-			free(cmd->redir);
-			cmd->redir = rd_next;
-		}
-		free(cmd);
-		cmd = next;
-	}
-}
-
 void	free_env_list(t_env *env)
 {
-	t_env *tmp;
+	t_env	*tmp;
 
 	while (env)
 	{
@@ -56,7 +23,7 @@ int	is_builtin(char *cmd)
 {
 	if (!cmd)
 		return (0);
-	return (!ft_strcmp(cmd, "echo") 
+	return (!ft_strcmp(cmd, "echo")
 		|| !ft_strcmp(cmd, "cd")
 		|| !ft_strcmp(cmd, "pwd")
 		|| !ft_strcmp(cmd, "export")

@@ -2,22 +2,25 @@
 
 void	handle_parent_after_fork(t_cmd *cmd, int *in_fd, int fd[2])
 {
-	if(*in_fd != 0)
+	if (*in_fd != 0)
 		close(*in_fd);
 	if (cmd->next)
 	{
 		close(fd[1]);
-		*in_fd = fd[0];// save read for the next cmd/child
+		*in_fd = fd[0];
 	}
 }
 
 void	wait_for_pipeline(pid_t last_pid)
 {
-	int	status;
+	int		status;
 	pid_t	pid;
 
-	while ((pid = waitpid(-1, &status, 0)) > 0)
+	while (1)
 	{
+		pid = waitpid(-1, &status, 0);
+		if (pid <= 0)
+			break ;
 		if (pid == last_pid)
 		{
 			if (WIFEXITED(status))
@@ -30,8 +33,8 @@ void	wait_for_pipeline(pid_t last_pid)
 
 int	execute_pipeline(t_cmd *cmds, t_env **env)
 {
-	int	in_fd;
-	int	fd[2];
+	int		in_fd;
+	int		fd[2];
 	pid_t	pid;
 	pid_t	last_pid;
 

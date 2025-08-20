@@ -31,7 +31,9 @@ void	exec_builtin_child(t_cmd *cmd, t_env **env)
 
 void	pipe_child(t_cmd *cmd, int in_fd, int pipefd[2], t_env **env)
 {
-	char (*path), (**real_envp);
+	char	*path;
+	char	**real_envp;
+
 	setup_child_signals();
 	setup_pipes_child(in_fd, cmd, pipefd);
 	if (handle_redirections(cmd->redir))

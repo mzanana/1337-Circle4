@@ -79,7 +79,6 @@ int	run_builtin_child(t_cmd *cmd, t_env **env);
 int	is_single_builtin(t_cmd *cmd);
 void	free_env_list(t_env *env);//temporary
 void	ft_free_split(char **arr);
-void	free_cmds(t_cmd *cmd);
 
 /* signals */
 void    setup_promt_signals(void);

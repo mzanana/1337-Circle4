@@ -1,7 +1,7 @@
 #include "exec.h"
 
-# define GET 0
-# define SET 1
+#define GET 0
+#define SET 1
 
 static void	status_main(int action, int *value)
 {

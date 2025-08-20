@@ -28,6 +28,7 @@ int	apply_file_redirection(t_redir *redir, int fd)
 	close(fd);
 	return (0);
 }
+
 int	handle_redirections(t_redir *redir)
 {
 	int	fd;
@@ -35,8 +36,8 @@ int	handle_redirections(t_redir *redir)
 	while (redir)
 	{
 		fd = open_redirection_file(redir);
-			if (apply_file_redirection(redir, fd) == -1)
-				return (-1);
+		if (apply_file_redirection(redir, fd) == -1)
+			return (-1);
 		redir = redir->next;
 	}
 	return (0);
