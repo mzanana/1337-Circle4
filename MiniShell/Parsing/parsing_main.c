@@ -37,6 +37,7 @@ char *ft_readline (const char *str)
 	ret = readline(str);
 	if (!ret)
 	{
+		gc_calloc(-1);
 		printf("exit\n");
 		return NULL;
 	}	
@@ -56,29 +57,3 @@ bool check_tokens(t_token *tokens, char **line)
 	}
 	return 1;
 }
-
-// int	main()
-// {
-// 	char	*line;
-// 	t_token	*tokens;
-// 	t_cmd	*commands;
-
-// 	while (1)
-// 	{
-// 		line = ft_readline("minishell$ ");
-// 		if (!line)
-// 			break;
-// 		tokens = tokenize_input(line);
-// 		if (!check_tokens(tokens, &line))
-// 			continue ;
-// 		// printf ("\nTokenizer output :\n");
-// 		// print_tokens(tokens);
-// 		commands = tokens_to_commands(tokens);
-// 		printf ("\nParser output :\n\n");
-// 		print_parsed_commands(commands);
-// 		gc_calloc(-1);
-// 		free(line);
-// 	}
-
-// 	return (0);
-// }
