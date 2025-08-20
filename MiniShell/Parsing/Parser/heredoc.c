@@ -1,4 +1,4 @@
-#include "../parsing_hf.h"
+#include "../../execution/exec.h"
 
 bool	g_herdoc_stop = false;
 
@@ -30,29 +30,17 @@ char	*ft_strjoin2(char const *s1, char const *s2)
 	return (ret);
 }
 
-void	sigint_handler_herdoc(int signal)
+void    sigint_handler_herdoc(int sig)
 {
-	(void)signal;
-	g_herdoc_stop = true;
-	status_set(130);
-	rl_replace_line("", 0);
-	rl_on_new_line();
-	rl_redisplay();
-	ioctl(STDIN_FILENO, TIOCSTI, "\n");
+    (void)sig;
+    g_herdoc_stop = true;
+    status_set(130);
+    rl_replace_line("", 0);
+    write(1, "\n", 1);
+    rl_done = 1;  // cleanly stop readline loop immediately
 }
 
-char    *expand_heredoc_line(char *line, t_env *env)
-{
-    char    *buf;
-    int len;
-    
-    len = new_len(line, env) + 2;
-    buf = gc_calloc(sizeof(char) * len);
-    if (!buf)
-    return (NULL);
-    expand_into(buf, line, env);
-    return (ft_strjoin2(buf, "\n"));
-}
+
 char *make_tempfile(void)
 {
 	char *random;
@@ -70,7 +58,6 @@ char *make_tempfile(void)
 		fd = open(full, O_CREAT | O_EXCL | O_WRONLY, 0644);
 		if (fd > 0)
 			break;
-		// free(full);
 		i++;
 	}
 	close(fd);
@@ -88,12 +75,62 @@ void    cleanup_heredocs(t_cmd *cmd)
         {
             if (r->type == T_HEREDOC && r->is_temp)
             unlink(r->filename);
-            //free(r->filename);
             r = r->next;
         }
         cmd = cmd->next;
     }
 }
+
+void	expand_into_heredoc(char *dst, char *src, t_env *env)
+{
+	char	*key;
+	
+	int (i), (j),(k);
+	i = 0;
+	j = 0;
+    k = 0;
+
+	while (src[j])
+	{
+		if (src[j] == '$' && src[j + 1] && (var_start(src[j + 1]) || src[j + 1] == '?'))
+		{
+			if (src[j + 1] == '?')
+			{
+				char	*status_str = ft_itoa(status_get());
+				write_val(dst, &i, status_str);
+				free(status_str);
+				j += 2;
+			}
+			else 
+			{
+				k = 0;
+				while (src[++j] && var_middle(src[j]))
+					k++;
+ 				key = ft_substr2(src, j - k, k);
+				write_val(dst, &i, env_val(key, env));
+			}
+		}
+		else
+			dst[i++] = src[j++];
+	}
+	dst[i] = '\0';
+}
+
+char *expand_heredoc(char *str, t_env *env)
+{
+	int len;
+	char *buff;
+
+	len = new_len(str, env);
+	buff = gc_calloc(sizeof(char) * len);
+	if (!buff)
+		return NULL;
+	expand_into_heredoc(buff, str, env);
+
+	return (ft_strjoin2(buff, "\n"));
+}
+
+
 char    *read_heredoc(char *delimiter, bool expand, t_env *env)
 {
     char    *line;
@@ -108,7 +145,6 @@ char    *read_heredoc(char *delimiter, bool expand, t_env *env)
     if (fd < 0)
     {
         perror("heredoc");
-        // free(tmp_path);
         return (NULL);
     }
     signal(SIGINT, sigint_handler_herdoc);
@@ -127,21 +163,24 @@ char    *read_heredoc(char *delimiter, bool expand, t_env *env)
             free(line);
             close(fd);
             unlink(tmp_path);
-            // free(tmp_path);
+            setup_promt_signals();  // restore normal prompt signals
+            rl_replace_line("", 0);
+            rl_on_new_line();
+            rl_redisplay();         // force immediate redisplay of main prompt
             return (NULL);
         }
+
         if (ft_strcmp(line, delimiter) == 0)
         {
             free(line);
             break ;
         }
         if (expand)
-            expanded = expand_heredoc_line(line, env);
+            expanded = expand_heredoc(line, env);
         else
             expanded = ft_strjoin2(line, "\n");
         write(fd, expanded, ft_strlen(expanded));
         free(line);
-        // free(expanded);
     }
     close(fd);
     return (tmp_path);
