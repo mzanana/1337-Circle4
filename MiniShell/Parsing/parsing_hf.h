@@ -54,6 +54,7 @@ typedef struct s_redir
 typedef struct s_cmd
 {
 	char		**argv;
+	bool		expansion;
 	t_redir		*redir;
 	struct s_cmd	*next;
 } t_cmd;
@@ -86,11 +87,11 @@ bool	handle_operator_token(t_token **tokens, char *input, int *i);
 void    *gc_calloc(int size);
 
 void print_parsed_commands(t_cmd *cmds);
-t_cmd *tokens_to_commands(t_token *tokens);
+t_cmd *tokens_to_commands(t_token *tokens, t_env *env);
 void ft_expand (t_cmd *command, t_env *env);
 bool check_tokens(t_token *tokens, char **line);
 
-void	expand_into(char *dst, char *src, t_env *env);
+void	expand_into(char *dst, char *src, char *map, char *nmap, t_env *env);
 bool    process_all_heredocs(t_cmd *cmds, t_env *env);
 void    cleanup_heredocs(t_cmd *cmd);
 int	new_len(char *s, t_env *env);
@@ -111,9 +112,10 @@ int var_start(char c);
 int var_middle(char c);
 int	quote_checker(char c, int *sq, int *dq, int *cnt);
 char *expand_it(char *str, t_env *env);
-char	*remove_qoutes_if_needed(char *s, bool *quoted);
+char *expand_heredoc(char *str, t_env *env);
+char	*remove_qoutes_if_needed(char *s, char *nmap);
 
-
+char *ft_strdup2(char *s);
 bool	join_current_dir(t_cmd *cmd, char *patern);
 bool	wildcmp(char *str, char *pattern);
 bool	_wildcmp_help(char *str, char *pattern);
@@ -124,5 +126,8 @@ char	*join_current_dir_redi(char *patern);
 char	*get_single_file_or_null(char *patern);
 int	asterisk_in_filename(char *target, t_cmd *cmd, t_token *tok);
 void	cmd_argv_fill(t_cmd *cmd, char *value);
+char	*ft_strjoin2(char const *s1, char const *s2);
+void	write_val(char *dst, int *i, char *val);
+void    reset_prompt_signals(void);
 
 #endif
