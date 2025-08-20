@@ -23,19 +23,19 @@ int main(int ac, char **av, char **envp)
 		tokens = tokenize_input(input);
 		if (!check_tokens(tokens, &input))
 		{
+			status_set(2);
 			free(input);
 			gc_calloc(-1);
 			continue;
 		}
-		head = tokens_to_commands(tokens);
-		
+		head = tokens_to_commands(tokens, env);
 		if (!process_all_heredocs(head, env))
 		{
 			free(input);
 			status_set(130);
-			continue ;
+			ioctl(STDIN_FILENO, TIOCSTI, "\n");
+			continue;
 		}
-		ft_expand(head, env);
 		if (head)
 		{
 			last_status = run_command(head, &env);
