@@ -30,14 +30,13 @@ char	*ft_strjoin2(char const *s1, char const *s2)
 	return (ret);
 }
 
-void    sigint_handler_herdoc(int sig)
+void sigint_handler_herdoc(int signal)
 {
-    (void)sig;
+    (void)signal;
     g_herdoc_stop = true;
     status_set(130);
     rl_replace_line("", 0);
-    write(1, "\n", 1);
-    rl_done = 1;  // cleanly stop readline loop immediately
+    ioctl(STDIN_FILENO, TIOCSTI, "\n");   // << key difference
 }
 
 
@@ -163,13 +162,8 @@ char    *read_heredoc(char *delimiter, bool expand, t_env *env)
             free(line);
             close(fd);
             unlink(tmp_path);
-            setup_promt_signals();  // restore normal prompt signals
-            rl_replace_line("", 0);
-            rl_on_new_line();
-            rl_redisplay();         // force immediate redisplay of main prompt
             return (NULL);
         }
-
         if (ft_strcmp(line, delimiter) == 0)
         {
             free(line);

@@ -33,7 +33,6 @@ int main(int ac, char **av, char **envp)
 		{
 			free(input);
 			status_set(130);
-			ioctl(STDIN_FILENO, TIOCSTI, "\n");
 			continue;
 		}
 		if (head)
