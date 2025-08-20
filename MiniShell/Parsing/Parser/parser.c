@@ -79,7 +79,38 @@ void cmd_add_back(t_cmd **head, t_cmd *new)
 	return ;
 }
 
-char	*remove_qoutes_if_needed(char *s, bool *quoted)
+char	*remove_qoutes_if_needed(char *s, char *nmap)
+{
+	char	*res;
+	// char	qoute;
+	int	i;
+	int	j;
+
+	i = 0;
+	j = 0;
+	while(nmap && nmap[i])
+	{
+		if (nmap[i] == '1')
+			j++;
+		i++;
+	}
+	res = gc_calloc(ft_strlen(s) - j + 1);
+	if (!res || !s)
+		return (NULL);
+	i = 0;
+	j = 0;
+	int k = 0;
+	while (s[i])
+	{
+		if (nmap[i] == '1')
+			i++;
+		else
+			res[j++] = s[i++];	
+	}
+	res[j] = '\0';
+	return (res);
+}
+char	*heredoc_quote_remover(char *s, bool *quoted)
 {
 	char	*res;
 	char	qoute;
@@ -108,7 +139,8 @@ char	*remove_qoutes_if_needed(char *s, bool *quoted)
 	res[j] = '\0';
 	return (res);
 }
-t_cmd *tokens_to_commands(t_token *tokens)
+
+t_cmd *tokens_to_commands(t_token *tokens, t_env *env)
 {
 	t_cmd	*ret;
 	t_cmd	*tmp;
@@ -123,6 +155,7 @@ t_cmd *tokens_to_commands(t_token *tokens)
 		{
 			if (tokens->type == T_WORD)
 			{
+				tokens->value = expand_it(tokens->value, env);
 				if (!tokens->is_quoted && ft_strchr(tokens->value, '*'))
 				{
 					if (!join_current_dir(tmp, tokens->value))
@@ -137,8 +170,12 @@ t_cmd *tokens_to_commands(t_token *tokens)
 				is_quoted = false;
 				heredoc_del = tokens->next->value;
 				if (tokens->type == T_HEREDOC)
-					heredoc_del = remove_qoutes_if_needed(heredoc_del, &is_quoted);
-				if (!tokens->is_quoted && ft_strchr(heredoc_del, '*'))
+					heredoc_del = heredoc_quote_remover(heredoc_del, &is_quoted);
+				else
+					heredoc_del = expand_it(tokens->next->value, env);
+				tokens->value = expand_it(tokens->value, env);
+				
+				if (tokens->type != T_HEREDOC && !tokens->is_quoted && ft_strchr(heredoc_del, '*'))
 				{
 					char *tes = join_current_dir_redi(heredoc_del);
 					if (tes)
