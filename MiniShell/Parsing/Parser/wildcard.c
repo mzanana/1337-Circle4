@@ -164,7 +164,7 @@ bool	join_current_dir(t_cmd *cmd, char *patern)
 			continue ;
 		if (wildcmp(dir->d_name, patern))
 		{
-            cmd_argv_fill(cmd, ft_strdup(dir->d_name));
+            cmd_argv_fill(cmd, ft_strdup2(dir->d_name));
 			added = true;
 		}
 	}
