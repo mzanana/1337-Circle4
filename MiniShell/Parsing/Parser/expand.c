@@ -35,7 +35,7 @@ void	write_val(char *dst, int *i, char *val)
 	}
 }
 
-void	expand_into(char *dst, char *src, t_env *env)
+void	expand_into(char *dst, char *src,char *map, char *nmap, t_env *env)
 {
 	char	*key;
 	
@@ -44,32 +44,89 @@ void	expand_into(char *dst, char *src, t_env *env)
 	j = 0;
 	sq = 0;
 	dq = 0;
+	int e = 0; // for map
+	int f = 0; // for nmap
 
 	while (src[j])
 	{
-		if ((src[j] == '\'' || src[j] == '"') &&  quote_checker(src[j], &sq, &dq, NULL)) (void)dq;
+		quote_checker(src[j], &sq, &dq, NULL);
 		if (src[j] == '$' && !sq && src[j + 1] && (var_start(src[j + 1]) || src[j + 1] == '?'))
 		{
 			if (src[j + 1] == '?')
 			{
 				char	*status_str = ft_itoa(status_get());
+				// printf("\n\n%s\n\n", status_str);
 				write_val(dst, &i, status_str);
-				free(status_str);
+				k = 0;
+				while (k < ft_strlen(status_str))
+				{
+					nmap[f++] = '0';
+					k++;
+				}
 				j += 2;
+				e += 2;
+				free(status_str);
 			}
 			else 
 			{
 				k = 0;
 				while (src[++j] && var_middle(src[j]))
 					k++;
-				key = ft_substr2(src, j - k, k);
+				e += k + 1;
+ 				key = ft_substr2(src, j - k, k);
+				k = ft_strlen(env_val(key, env));
+				int d=0;
+				while (d < k)
+				{
+					nmap[f++] = '0';
+					d++;
+				}
 				write_val(dst, &i, env_val(key, env));
 			}
 		}
 		else
+		{
+			nmap[f++] = map[e++];
 			dst[i++] = src[j++];
+		}
 	}
+	// printf("\nmap -> %s\nnmap -> %s\n", map, nmap);
+	nmap[f] = '\0';
 	dst[i] = '\0';
+}
+char *ft_strdup2(char *s)
+{
+	char	*ret;
+	size_t	len;
+	int		index;
+
+	len = ft_strlen(s);
+	ret = (char *)gc_calloc ((len + 1) * sizeof(char));
+	if (!ret)
+		return (NULL);
+	index = -1;
+	while (s[++index])
+		ret[index] = s[index];
+	ret[index] = '\0';
+	return (ret);
+}
+
+char *ft_map(char *str)
+{
+	int i = 0;
+	int sq = 0;
+	int dq = 0;
+	char *map = ft_strdup2(str);
+
+	while (map[i])
+	{
+		if (quote_checker(map[i], &sq, &dq, 0))
+			map[i] = '1';
+		else
+			map[i] = '0';
+		i++;
+	}
+	return (map);
 }
 
 char *expand_it(char *str, t_env *env)
@@ -77,13 +134,20 @@ char *expand_it(char *str, t_env *env)
 	int len;
 	char *buff;
 	char *ret;
-	
+	char *map;
+	char *nmap;
+
+	map = ft_map(str);
+		// printf("\n%s\n", map);
 	len = new_len(str, env);
+	nmap = gc_calloc(sizeof(char) * len);
 	buff = gc_calloc(sizeof(char) * len);
 	if (!buff)
 		return NULL;
-	expand_into(buff, str, env);
-	ret = remove_qoutes_if_needed(buff, (bool *)&len);
+	expand_into(buff, str, map, nmap, env);
+	// printf("\n%s\n", buff);
+	ret = remove_qoutes_if_needed(buff, nmap);
+	// printf("\n%s",ret);
 	return (ret);
 }
 
