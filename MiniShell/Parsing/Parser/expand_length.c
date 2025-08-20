@@ -55,7 +55,12 @@ int	new_len(char *s, t_env *env)
 		if (s[i] == '\'' || s[i] == '"')
 			quote_checker(s[i], &sq, &dq, 0);
 		else if (s[i] == '$' && !sq && s[i + 1] && (var_start(s[i + 1]) || s[i + 1] == '?'))
+		{
+			if (s[i + 1] == '?')
+				len += 3;
+			else
 				len += env_len(s, &i, env);
+		}
 		i++;
 	}
 	return (len);
