@@ -123,6 +123,7 @@ char *expand_heredoc(char *str, t_env *env);
 char	*remove_qoutes_if_needed(char *s, char *nmap);
 
 char *ft_strdup2(char *s);
+char	*ft_strjoin2(char const *s1, char const *s2);
 bool	join_current_dir(t_cmd *cmd, char *patern);
 bool	wildcmp(char *str, char *pattern);
 bool	_wildcmp_help(char *str, char *pattern);
@@ -136,5 +137,10 @@ void	cmd_argv_fill(t_cmd *cmd, char *value);
 char	*ft_strjoin2(char const *s1, char const *s2);
 void	write_val(char *dst, int *i, char *val);
 void    reset_prompt_signals(void);
+
+void sigint_handler_herdoc(int signal);
+char *make_tempfile(void);
+void    cleanup_heredocs(t_cmd *cmd);
+int open_tmpfile(char **tmp_path);
 
 #endif
