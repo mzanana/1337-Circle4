@@ -1,6 +1,7 @@
 #ifndef PARSING_HF_H
 #define PARSING_HF_H
 
+
 # include <stdio.h>
 # include <stdlib.h>
 # include <unistd.h>
@@ -85,7 +86,11 @@ bool	append_quoted_segment(char **buffer, char *input, int *i);
 char	*append_char_to_buffer(char *buffer, char c);
 bool	handle_operator_token(t_token **tokens, char *input, int *i);
 void    *gc_calloc(int size);
-
+bool	is_redirection(t_token_type type);
+void	print_unexpected_token(const char *token);
+void	print_unexpected_newline(void);
+bool	is_pipe_error(t_token *curr, t_token *next);
+bool	is_redirection_error(t_token *curr, t_token *next);
 void print_parsed_commands(t_cmd *cmds);
 t_cmd *tokens_to_commands(t_token *tokens, t_env *env);
 void ft_expand (t_cmd *command, t_env *env);
