@@ -1,4 +1,3 @@
-
 #include "../../execution/exec.h"
 
 int	quote_checker(char c, int *sq, int *dq, int *cnt)
@@ -39,13 +38,13 @@ void	expand_into(char *dst, char *src,char *map, char *nmap, t_env *env)
 {
 	char	*key;
 	
-	int (i), (j), (sq), (dq), (k);
+	int (i), (j), (sq), (dq), (k), (e), (f);
 	i = 0;
 	j = 0;
 	sq = 0;
 	dq = 0;
-	int e = 0; // for map
-	int f = 0; // for nmap
+	e = 0; // for map
+	f = 0; // for nmap
 
 	while (src[j])
 	{
@@ -58,7 +57,7 @@ void	expand_into(char *dst, char *src,char *map, char *nmap, t_env *env)
 				// printf("\n\n%s\n\n", status_str);
 				write_val(dst, &i, status_str);
 				k = 0;
-				while (k < ft_strlen(status_str))
+				while (k < (int)ft_strlen(status_str))
 				{
 					nmap[f++] = '0';
 					k++;
@@ -90,7 +89,6 @@ void	expand_into(char *dst, char *src,char *map, char *nmap, t_env *env)
 			dst[i++] = src[j++];
 		}
 	}
-	// printf("\nmap -> %s\nnmap -> %s\n", map, nmap);
 	nmap[f] = '\0';
 	dst[i] = '\0';
 }
@@ -128,6 +126,35 @@ char *ft_map(char *str)
 	}
 	return (map);
 }
+char	*remove_qoutes_if_needed(char *s, char *nmap)
+{
+	char	*res;
+	int		i;
+	int		j;
+
+	i = 0;
+	j = 0;
+	while (nmap && nmap[i])
+	{
+		if (nmap[i] == '1')
+			j++;
+		i++;
+	}
+	res = gc_calloc(ft_strlen(s) - j + 1);
+	if (!res || !s)
+		return (NULL);
+	i = 0;
+	j = 0;
+	while (s[i])
+	{
+		if (nmap[i] == '1')
+			i++;
+		else
+			res[j++] = s[i++];
+	}
+	res[j] = '\0';
+	return (res);
+}
 
 char *expand_it(char *str, t_env *env)
 {
@@ -138,16 +165,13 @@ char *expand_it(char *str, t_env *env)
 	char *nmap;
 
 	map = ft_map(str);
-		// printf("\n%s\n", map);
 	len = new_len(str, env);
 	nmap = gc_calloc(sizeof(char) * len);
 	buff = gc_calloc(sizeof(char) * len);
 	if (!buff)
 		return NULL;
 	expand_into(buff, str, map, nmap, env);
-	// printf("\n%s\n", buff);
 	ret = remove_qoutes_if_needed(buff, nmap);
-	// printf("\n%s",ret);
 	return (ret);
 }
 
