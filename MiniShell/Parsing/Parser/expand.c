@@ -34,65 +34,70 @@ void	write_val(char *dst, int *i, char *val)
 	}
 }
 
-void	expand_into(char *dst, char *src,char *map, char *nmap, t_env *env)
+void	handle_exit_status(char *dst, t_exp_vars *vars)
 {
-	char	*key;
-	
-	int (i), (j), (sq), (dq), (k), (e), (f);
-	i = 0;
-	j = 0;
-	sq = 0;
-	dq = 0;
-	e = 0; // for map
-	f = 0; // for nmap
+	char	*status_str;
 
-	while (src[j])
+	status_str = ft_itoa(status_get());
+	write_val(dst, &vars->i, status_str);
+	vars->k = 0;
+	while (vars->k < (int)ft_strlen(status_str))
 	{
-		quote_checker(src[j], &sq, &dq, NULL);
-		if (src[j] == '$' && !sq && src[j + 1] && (var_start(src[j + 1]) || src[j + 1] == '?'))
+		vars->nmap[vars->f++] = '0';
+		vars->k++;
+	}
+	vars->j += 2;
+	vars->e += 2;
+	free(status_str);
+}
+
+void	handle_variable_expansion(char *dst, char *src, \
+	t_exp_vars *vars, t_env *env)
+{
+	int	d;
+
+	vars->k = 0;
+	while (src[++vars->j] && var_middle(src[vars->j]))
+		vars->k++;
+	vars->e += vars->k + 1;
+	vars->key = ft_substr2(src, vars->j - vars->k, vars->k);
+	vars->k = ft_strlen(env_val(vars->key, env));
+	d = 0;
+	while (d < vars->k)
+	{
+		vars->nmap[vars->f++] = '0';
+		d++;
+	}
+	write_val(dst, &vars->i, env_val(vars->key, env));
+}
+
+void	fill_nmap_and_dst(char *dst, char *src, t_exp_vars *vars)
+{
+	vars->nmap[vars->f++] = vars->map[vars->e++];
+	dst[vars->i++] = src[vars->j++];
+}
+
+void	expand_into(char *dst, char *src, t_exp_vars *vars, t_env *env)
+{
+	while (src[vars->j])
+	{
+		quote_checker(src[vars->j], &vars->sq, &vars->dq, NULL);
+		if (src[vars->j] == '$' && !vars->sq && src[vars->j + 1] && \
+			(var_start(src[vars->j + 1]) || src[vars->j + 1] == '?'))
 		{
-			if (src[j + 1] == '?')
-			{
-				char	*status_str = ft_itoa(status_get());
-				// printf("\n\n%s\n\n", status_str);
-				write_val(dst, &i, status_str);
-				k = 0;
-				while (k < (int)ft_strlen(status_str))
-				{
-					nmap[f++] = '0';
-					k++;
-				}
-				j += 2;
-				e += 2;
-				free(status_str);
-			}
-			else 
-			{
-				k = 0;
-				while (src[++j] && var_middle(src[j]))
-					k++;
-				e += k + 1;
- 				key = ft_substr2(src, j - k, k);
-				k = ft_strlen(env_val(key, env));
-				int d=0;
-				while (d < k)
-				{
-					nmap[f++] = '0';
-					d++;
-				}
-				write_val(dst, &i, env_val(key, env));
-			}
+			if (src[vars->j + 1] == '?')
+				handle_exit_status(dst, vars);
+			else
+				handle_variable_expansion(dst, src, vars, env);
 		}
 		else
-		{
-			nmap[f++] = map[e++];
-			dst[i++] = src[j++];
-		}
+			fill_nmap_and_dst(dst, src, vars);
 	}
-	nmap[f] = '\0';
-	dst[i] = '\0';
+	vars->nmap[vars->f] = '\0';
+	dst[vars->i] = '\0';
 }
-char *ft_strdup2(char *s)
+
+char	*ft_strdup2(char *s)
 {
 	char	*ret;
 	size_t	len;
@@ -109,13 +114,13 @@ char *ft_strdup2(char *s)
 	return (ret);
 }
 
-char *ft_map(char *str)
+char	*ft_map(char *str)
 {
-	int i = 0;
-	int sq = 0;
-	int dq = 0;
-	char *map = ft_strdup2(str);
+	char	*map;
 
+	int (i), (sq), (dq);
+	i = ((sq = 0), (dq = 0), 0);
+	map = ft_strdup2(str);
 	while (map[i])
 	{
 		if (quote_checker(map[i], &sq, &dq, 0))
@@ -126,12 +131,12 @@ char *ft_map(char *str)
 	}
 	return (map);
 }
+
 char	*remove_qoutes_if_needed(char *s, char *nmap)
 {
 	char	*res;
-	int		i;
-	int		j;
 
+	int (i), (j);
 	i = 0;
 	j = 0;
 	while (nmap && nmap[i])
@@ -156,45 +161,22 @@ char	*remove_qoutes_if_needed(char *s, char *nmap)
 	return (res);
 }
 
-char *expand_it(char *str, t_env *env)
+char	*expand_it(char *str, t_env *env)
 {
-	int len;
-	char *buff;
-	char *ret;
-	char *map;
-	char *nmap;
+	int			len;
+	char		*buff;
+	char		*ret;
+	t_exp_vars	vars;
 
-	map = ft_map(str);
+	vars.map = ft_map(str);
 	len = new_len(str, env);
-	nmap = gc_calloc(sizeof(char) * len);
+	vars.nmap = gc_calloc(sizeof(char) * len);
 	buff = gc_calloc(sizeof(char) * len);
 	if (!buff)
-		return NULL;
-	expand_into(buff, str, map, nmap, env);
-	ret = remove_qoutes_if_needed(buff, nmap);
+		return (NULL);
+	vars.i = ((vars.j = 0), (vars.sq = 0), (vars.dq = 0), \
+	(vars.k = 0), (vars.e = 0), (vars.f = 0), 0);
+	expand_into(buff, str, &vars, env);
+	ret = remove_qoutes_if_needed(buff, vars.nmap);
 	return (ret);
-}
-
-
-void	ft_expand(t_cmd *cmd, t_env *env)
-{
-	int		i;
-	t_redir *red_walk;
-
-	while (cmd)
-	{
-		red_walk = cmd->redir;
-		while (red_walk)
-		{
-			if (red_walk->type != T_HEREDOC)
-				red_walk->filename = expand_it(red_walk->filename, env);
-			red_walk = red_walk->next;
-		}
-		i = -1;
-		while (cmd->argv && cmd->argv[++i])
-			cmd->argv[i] = expand_it(cmd->argv[i], env);
-
-		cmd = cmd->next;
-	}
-
 }
