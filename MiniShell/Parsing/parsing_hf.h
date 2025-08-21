@@ -102,7 +102,9 @@ void    cleanup_heredocs(t_cmd *cmd);
 int	new_len(char *s, t_env *env);
 int	ft_strcmp(char *s1, char *s2);
 
-
+t_cmd	*handle_redirection(t_token **tokens, t_env *env, t_cmd *tmp);
+t_redir	*redir_maker(t_token_type type, char *value, bool is_quoted);
+void	cmd_redir_fill(t_redir **redir, t_token_type type, char *value, bool is_quoted);
 
 void	status_set(int value);
 int	status_get_tmp(void);
