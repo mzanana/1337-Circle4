@@ -1,24 +1,24 @@
 #include "../parsing_hf.h"
 
-char    *ft_strndup(char *str, size_t n)
+char	*ft_strndup(char *str, size_t n)
 {
-        size_t  i;
-        char    *dup;
+	size_t	i;
+	char	*dup;
 
-        i = 0;
-        while (str[i] && i < n)
-                i++;
-        dup = gc_calloc(sizeof(char) * (i + 1));
-        if (!dup)
-                return (NULL);
-        i = 0;
-        while (str[i] && i < n)
-        {
-                dup[i] = str[i];
-                i++;
-        }
-        dup[i] = '\0';
-        return (dup);
+	i = 0;
+	while (str[i] && i < n)
+		i++;
+	dup = gc_calloc(sizeof(char) * (i + 1));
+	if (!dup)
+		return (NULL);
+	i = 0;
+	while (str[i] && i < n)
+	{
+		dup[i] = str[i];
+		i++;
+	}
+	dup[i] = '\0';
+	return (dup);
 }
 
 int	is_operator(char c)
@@ -61,4 +61,3 @@ void	token_add_back(t_token **head, t_token *new)
 		last = last->next;
 	last->next = new;
 }
-

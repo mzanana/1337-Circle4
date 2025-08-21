@@ -1,22 +1,16 @@
 #include "../parsing_hf.h"
 
-void	print_unexpected_token(const char *token)
+bool	is_pipe_error(t_token *curr, t_token *next)
 {
-	size_t	token_len;
-
-	token_len = ft_strlen(token);
-	write(2, "minishell: syntax error near unexpected token `", 47);
-	write(2, token, token_len);
-	write(2, "'\n", 2);
-}
-
-void	print_unexpected_newline(void)
-{
-	write(2, "minishell: syntax error near unexpected token `newline`\n", 57);
-}
-bool	is_redirection(t_token_type type)
-{
-	return (type == T_REDIR_IN || type == T_REDIR_OUT || type == T_APPEND || type == T_HEREDOC);
+	if (curr->type == T_PIPE && (!next || next->type == T_PIPE))
+	{
+		if (!next)
+			print_unexpected_newline();
+		else
+			print_unexpected_token(next->value);
+		return (true);
+	}
+	return (false);
 }
 
 bool	check_pipe_syntax(t_token *tokens)
@@ -25,29 +19,38 @@ bool	check_pipe_syntax(t_token *tokens)
 	t_token	*next;
 
 	curr = tokens;
-	if (curr->type == T_PIPE) // pipe at the begening ==> | ls 
+	if (curr->type == T_PIPE)
 	{
-		print_unexpected_token(curr->value); // `|'
+		print_unexpected_token(curr->value);
 		return (false);
 	}
 	while (tokens && tokens->next)
 	{
 		curr = tokens;
 		next = tokens->next;
-		if (curr->type == T_PIPE && next->type == T_PIPE) // two pipe ==> cat file || ls
-		{
-			print_unexpected_token(next->value);
+		if (is_pipe_error(curr, next))
 			return (false);
-		}
 		tokens = tokens->next;
 	}
-	curr = tokens;
-	if (curr->type == T_PIPE) // pipe at the end ==> ls -la | grep hello |
+	if (tokens && tokens->type == T_PIPE)
 	{
 		print_unexpected_newline();
 		return (false);
 	}
 	return (true);
+}
+
+bool	is_redirection_error(t_token *curr, t_token *next)
+{
+	if (is_redirection(curr->type) && (!next || next->type != T_WORD))
+	{
+		if (!next)
+			print_unexpected_newline();
+		else
+			print_unexpected_token(next->value);
+		return (true);
+	}
+	return (false);
 }
 
 bool	check_redirection_syntax(t_token *tokens)
@@ -59,28 +62,21 @@ bool	check_redirection_syntax(t_token *tokens)
 	{
 		curr = tokens;
 		next = tokens->next;
-		if (is_redirection(curr->type) && next->type != T_WORD) // redir not followed by a word
-		{
-			print_unexpected_token(next->value);
-			return (false); // examples : (echo > <<)  (echo > |)
-		}
+		if (is_redirection_error(curr, next))
+			return (false);
 		tokens = tokens->next;
 	}
-	if (tokens)
+	if (tokens && is_redirection(tokens->type))
 	{
-		curr = tokens;
-		if (is_redirection(curr->type)) // redir at the end ==> (echo >>)
-		{
-			print_unexpected_newline();
-			return (false);
-		}
+		print_unexpected_newline();
+		return (false);
 	}
 	return (true);
 }
 
 bool	syntax_is_valid(t_token *tokens)
 {
-	if (!tokens) // no tokens = valide
+	if (!tokens)
 		return (true);
 	if (!check_redirection_syntax(tokens))
 		return (false);
