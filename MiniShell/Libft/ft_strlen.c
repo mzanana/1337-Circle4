@@ -6,10 +6,9 @@
 /*   By: mzanana <mzanana@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/09 08:01:24 by mzanana           #+#    #+#             */
-/*   Updated: 2025/08/19 22:27:27 by mzanana          ###   ########.fr       */
+/*   Updated: 2025/08/22 00:18:36 by anaamaja         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
-
 
 #include "libft.h"
 
@@ -19,7 +18,7 @@ size_t	ft_strlen(const char *s)
 
 	ret = 0;
 	if (!s)
-		return 0;
+		return (0);
 	while (s[ret])
 		ret++;
 	return (ret);

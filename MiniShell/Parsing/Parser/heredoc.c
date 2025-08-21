@@ -1,55 +1,18 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   heredoc.c                                          :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: anaamaja <anaamaja@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/08/22 00:20:14 by anaamaja          #+#    #+#             */
+/*   Updated: 2025/08/22 00:20:15 by anaamaja         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../../execution/exec.h"
 
 bool	g_herdoc_stop = false;
-
-void	export_exit_(char *dst, int *i, int *j)
-{
-	char	*status_str;
-
-	status_str = ft_itoa(status_get());
-	write_val(dst, i, status_str);
-	free(status_str);
-	(*j) += 2;
-}
-void	expand_into_heredoc(char *dst, char *src, t_env *env)
-{
-	char	*key;
-
-	int (i), (j),(k);
-	i = ((j = 0), (k = 0), 0);
-	while (src[j])
-	{
-		if (src[j] == '$' && src[j + 1] && (var_start(src[j + 1]) || src[j + 1] == '?'))
-		{
-			if (src[j + 1] == '?')
-				export_exit_(dst, &i, &j);
-			else 
-			{
-				k = 0;
-				while (src[++j] && var_middle(src[j]))
-					k++;
- 				key = ft_substr2(src, j - k, k);
-				write_val(dst, &i, env_val(key, env));
-			}
-		}
-		else
-			dst[i++] = src[j++];
-	}
-	dst[i] = '\0';
-}
-
-char	*expand_heredoc(char *str, t_env *env)
-{
-	int		len;
-	char	*buff;
-
-	len = new_len(str, env);
-	buff = gc_calloc(sizeof(char) * len);
-	if (!buff)
-		return (NULL);
-	expand_into_heredoc(buff, str, env);
-	return (ft_strjoin2(buff, "\n"));
-}
 
 bool	is_del(char *line, char *delimiter)
 {
@@ -59,6 +22,14 @@ bool	is_del(char *line, char *delimiter)
 		return (true);
 	}
 	return (false);
+}
+
+void	write_eof_warning(char *delimiter)
+{
+	write (2, "minishell: warning: here-document \
+	delimited by end-of-file (wanted `", 68);
+	write (2, delimiter, ft_strlen(delimiter));
+	write (2, "`)\n", 3);
 }
 
 bool	handle_line(char *line, int fd, bool expand, t_env *env)
@@ -72,14 +43,6 @@ bool	handle_line(char *line, int fd, bool expand, t_env *env)
 	write(fd, expanded, ft_strlen(expanded));
 	free(line);
 	return (true);
-}
-
-void	write_eof_warning(char *delimiter)
-{
-	write(2, "minishell: warning: here-document \
-	delimited by end-of-file (wanted `", 68);
-	write(2, delimiter, ft_strlen(delimiter));
-	write(2, "`)\n", 3);
 }
 
 char	*read_heredoc(char *delimiter, bool expand, t_env *env)

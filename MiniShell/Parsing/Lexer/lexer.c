@@ -14,6 +14,7 @@ bool	handle_operator_token(t_token **tokens, char *input, int *i)
 {
 	t_token	*new_token;
 
+	new_token = NULL;
 	if (input[*i] == '|')
 		new_token = token_new(ft_strndup("|", 1), T_PIPE, 0);
 	else if (input[*i] == '<' && input[*i + 1] == '<')
@@ -22,7 +23,7 @@ bool	handle_operator_token(t_token **tokens, char *input, int *i)
 		new_token = token_new(ft_strndup(">>", 2), T_APPEND, 0);
 	else if (input[*i] == '<')
 		new_token = token_new(ft_strndup("<", 1), T_REDIR_IN, 0);
-	else if (input[*i] == '>')
+	else
 		new_token = token_new(ft_strndup(">", 1), T_REDIR_OUT, 0);
 	if (!new_token)
 		return (false);
