@@ -1,72 +1,9 @@
 #include "../parsing_hf.h"
 
-int	count_args(t_cmd *cmd)
+void	cmd_add_back(t_cmd **head, t_cmd *new)
 {
-	int ret;
+	t_cmd	*tmp;
 
-	if (!cmd->argv)
-		return (0);
-	ret = 0;
-	while (cmd->argv[ret])
-		ret++;
-	return ret;
-}
-
-void	cmd_argv_fill(t_cmd *cmd, char *value)
-{
-	char	**new_argv;
-	int		length;
-	int		i;
-
-	length = count_args(cmd);
-	new_argv = gc_calloc(sizeof(char*) * (length + 2));
-	if (!new_argv)
-		return ;
-	if (cmd->argv)
-	{
-		i = -1;
-		while (cmd->argv[++i])
-			new_argv[i] = cmd->argv[i];
-	}
-	new_argv[length] = value;
-	new_argv[length + 1] = NULL;
-	cmd->argv = NULL;
-	cmd->argv = new_argv;
-}
-
-t_redir	*redir_maker(t_token_type type, char *value, bool is_quoted)
-{
-	t_redir	*ret;
-
-	ret = gc_calloc (sizeof (t_redir));
-	ret->type = type;
-	ret->filename = value;
-	ret->quoted = is_quoted;
-	ret->next = NULL;
-	return (ret);
-}
-
-void	cmd_redir_fill(t_redir **redir, t_token_type type, char * value, bool is_quoted)
-{
-	t_redir	*curr;
-	t_redir	*holder;
-	
-	if (!*redir)
-	{
-		*redir = redir_maker(type, value, is_quoted);
-		return ;
-	}
-	curr = *redir;
-	while (curr->next)
-		curr = curr->next;
-	holder = redir_maker(type, value, is_quoted);
-	curr->next = holder;
-	return ;
-}
-void cmd_add_back(t_cmd **head, t_cmd *new)
-{
-	t_cmd *tmp;
-	
 	if (!*head)
 	{
 		*head = new;
@@ -76,166 +13,53 @@ void cmd_add_back(t_cmd **head, t_cmd *new)
 	while (tmp->next)
 		tmp = tmp->next;
 	tmp->next = new;
-	return ;
 }
 
-char	*remove_qoutes_if_needed(char *s, char *nmap)
+t_cmd	*handle_word_token(t_token **tokens, t_env *env, t_cmd *tmp)
 {
-	char	*res;
-	// char	qoute;
-	int	i;
-	int	j;
-
-	i = 0;
-	j = 0;
-	while(nmap && nmap[i])
+	(*tokens)->value = expand_it((*tokens)->value, env);
+	if (!(*tokens)->is_quoted && ft_strchr((*tokens)->value, '*'))
 	{
-		if (nmap[i] == '1')
-			j++;
-		i++;
+		if (!join_current_dir(tmp, (*tokens)->value))
+			cmd_argv_fill(tmp, (*tokens)->value);
 	}
-	res = gc_calloc(ft_strlen(s) - j + 1);
-	if (!res || !s)
-		return (NULL);
-	i = 0;
-	j = 0;
-	int k = 0;
-	while (s[i])
-	{
-		if (nmap[i] == '1')
-			i++;
-		else
-			res[j++] = s[i++];	
-	}
-	res[j] = '\0';
-	return (res);
+	else if ((*tokens)->value[0] == '\0' && !(*tokens)->is_quoted)
+		;
+	else
+		cmd_argv_fill(tmp, (*tokens)->value);
+	*tokens = (*tokens)->next;
+	return (tmp);
 }
-char	*heredoc_quote_remover(char *s, bool *quoted)
+
+t_cmd	*tokens_to_commands_helper(t_token **tokens, t_env *env, t_cmd *tmp)
 {
-	char	*res;
-	char	qoute;
-	int	i;
-	int	j;
-
-	i = 0;
-	j = 0;
-	res = gc_calloc(ft_strlen(s) + 1);
-	if (!res || !s)
-		return (NULL);
-	while (s[i])
+	while (*tokens && (*tokens)->type != T_PIPE)
 	{
-		if (s[i] == '"' || s[i] == '\'')
-		{
-			qoute = s[i++];
-			*quoted = true;
-			while (s[i] &&s[i] != qoute)
-				res[j++] = s[i++];
-			if (s[i] == qoute)
-				i++;
-		}
+		if ((*tokens)->type == T_WORD)
+			tmp = handle_word_token(tokens, env, tmp);
 		else
-			res[j++] = s[i++];
+			tmp = handle_redirection(tokens, env, tmp);
+		if (!tmp)
+			return (NULL);
 	}
-	res[j] = '\0';
-	return (res);
+	return (tmp);
 }
 
-t_cmd *tokens_to_commands(t_token *tokens, t_env *env)
+t_cmd	*tokens_to_commands(t_token *tokens, t_env *env)
 {
 	t_cmd	*ret;
 	t_cmd	*tmp;
-	char	*heredoc_del;
-	bool	is_quoted;
-	
+
 	ret = NULL;
 	while (tokens)
 	{
 		tmp = gc_calloc(sizeof(t_cmd));
-		while (tokens && tokens->type != T_PIPE)
-		{
-			if (tokens->type == T_WORD)
-			{
-				tokens->value = expand_it(tokens->value, env);
-				if (!tokens->is_quoted && ft_strchr(tokens->value, '*'))
-				{
-					if (!join_current_dir(tmp, tokens->value))
-						cmd_argv_fill(tmp, tokens->value);					
-				}
-				else if (tokens->value[0] == '\0' && !tokens->is_quoted);
-				else
-					cmd_argv_fill(tmp, tokens->value);
-				tokens = tokens->next;
-			}
-			else
-			{
-				is_quoted = false;
-				heredoc_del = tokens->next->value;
-				if (tokens->type == T_HEREDOC)
-					heredoc_del = heredoc_quote_remover(heredoc_del, &is_quoted);
-				else
-					heredoc_del = expand_it(tokens->next->value, env);
-				tokens->value = expand_it(tokens->value, env);
-				
-				if (tokens->type != T_HEREDOC && !tokens->is_quoted && ft_strchr(heredoc_del, '*'))
-				{
-					char *tes = join_current_dir_redi(heredoc_del);
-					if (tes)
-						cmd_redir_fill(&(tmp->redir), tokens->type, tes, tokens->next->is_quoted);					
-					else
-					{
-						write (1, "minishell: ambiguous redirect\n", 30);
-						return (NULL);
-					}
-				}
-				else
-					cmd_redir_fill(&(tmp->redir), tokens->type, heredoc_del, tokens->next->is_quoted);
-				tokens = tokens->next->next;
-			}
-		}
+		tmp = tokens_to_commands_helper(&tokens, env, tmp);
+		if (!tmp)
+			return (NULL);
 		cmd_add_back(&ret, tmp);
 		if (tokens && tokens->type == T_PIPE)
 			tokens = tokens->next;
 	}
 	return (ret);
-}
-
-
-
-
-
-void print_parsed_commands(t_cmd *cmds)
-{
-    t_cmd *cmd;
-    int i;
-    t_redir *r;
-
-    cmd = cmds;
-    int cmd_index = 1;
-    while (cmd)
-    {
-        printf("=== Command %d ===\n", cmd_index++);
-        // Print argv
-        i = 0;
-        if (cmd->argv)
-        {
-            printf("argv: ");
-            while (cmd->argv[i])
-            {
-                printf("[%s] ", cmd->argv[i]);
-                i++;
-            }
-            printf("\n");// parser.c
-        }
-        else
-            printf("argv: (empty)\n");
-
-        // Print redirections
-        r = cmd->redir;
-        while (r)
-        {
-            printf("redir: type=%d file=[%s] quoted=%d\n", r->type, r->filename, r->quoted);
-            r = r->next;
-        }
-        cmd = cmd->next;
-    }
 }
