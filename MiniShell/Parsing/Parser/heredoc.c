@@ -2,26 +2,27 @@
 
 bool	g_herdoc_stop = false;
 
+void	export_exit_(char *dst, int *i, int *j)
+{
+	char	*status_str;
+
+	status_str = ft_itoa(status_get());
+	write_val(dst, i, status_str);
+	free(status_str);
+	(*j) += 2;
+}
 void	expand_into_heredoc(char *dst, char *src, t_env *env)
 {
 	char	*key;
-	
-	int (i), (j),(k);
-	i = 0;
-	j = 0;
-    k = 0;
 
+	int (i), (j),(k);
+	i = ((j = 0), (k = 0), 0);
 	while (src[j])
 	{
 		if (src[j] == '$' && src[j + 1] && (var_start(src[j + 1]) || src[j + 1] == '?'))
 		{
 			if (src[j + 1] == '?')
-			{
-				char	*status_str = ft_itoa(status_get());
-				write_val(dst, &i, status_str);
-				free(status_str);
-				j += 2;
-			}
+				export_exit_(dst, &i, &j);
 			else 
 			{
 				k = 0;
