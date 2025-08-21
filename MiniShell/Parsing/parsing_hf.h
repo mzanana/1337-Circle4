@@ -68,7 +68,19 @@ typedef struct s_env
 	char *value;
 	struct s_env *next;
 } t_env;
-
+typedef struct s_exp_vars
+{
+	int i;
+	int j;
+	int sq;
+	int dq;
+	int k;
+	int e;
+	int f;
+	char *key;
+	char *map;
+	char *nmap;
+} t_exp_vars;
 
 // Functions Prototypes :
 char *ft_readline (const char *str);
@@ -93,10 +105,10 @@ bool	is_pipe_error(t_token *curr, t_token *next);
 bool	is_redirection_error(t_token *curr, t_token *next);
 void print_parsed_commands(t_cmd *cmds);
 t_cmd *tokens_to_commands(t_token *tokens, t_env *env);
-void ft_expand (t_cmd *command, t_env *env);
 bool check_tokens(t_token *tokens, char **line);
 
-void	expand_into(char *dst, char *src, char *map, char *nmap, t_env *env);
+void	expand_into(char *dst, char *src, t_exp_vars *vars, t_env *env);
+// void	expand_into(char *dst, char *src, char *map, char *nmap, t_env *env);
 bool    process_all_heredocs(t_cmd *cmds, t_env *env);
 void    cleanup_heredocs(t_cmd *cmd);
 int	new_len(char *s, t_env *env);
