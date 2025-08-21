@@ -14,10 +14,10 @@ char	*env_val(char *key, t_env *env)
 	return (NULL);
 }
 
-int get_var_size(char *str, int i, int j, t_env *env)
+int	get_var_size(char *str, int i, int j, t_env *env)
 {
-	char *val;
-	char *key;
+	char	*val;
+	char	*key;
 
 	key = ft_substr2(str, i, j - i);
 	val = env_val(key, env);
@@ -25,10 +25,11 @@ int get_var_size(char *str, int i, int j, t_env *env)
 		return (0);
 	return (ft_strlen(val));
 }
+
 int	env_len(char *str, int *i, t_env *env)
 {
-	int ret;
-	int j;
+	int	ret;
+	int	j;
 
 	ret = 1;
 	j = *i + 1;
@@ -44,8 +45,7 @@ int	env_len(char *str, int *i, t_env *env)
 
 int	new_len(char *s, t_env *env)
 {
-	int	(i), (len), (sq), (dq);
-
+	int (i), (len), (sq), (dq);
 	i = 0;
 	len = ft_strlen(s) + 1;
 	sq = 0;
@@ -54,7 +54,8 @@ int	new_len(char *s, t_env *env)
 	{
 		if (s[i] == '\'' || s[i] == '"')
 			quote_checker(s[i], &sq, &dq, 0);
-		else if (s[i] == '$' && !sq && s[i + 1] && (var_start(s[i + 1]) || s[i + 1] == '?'))
+		else if (s[i] == '$' && !sq && s[i + 1] && \
+			(var_start(s[i + 1]) || s[i + 1] == '?'))
 		{
 			if (s[i + 1] == '?')
 				len += 3;

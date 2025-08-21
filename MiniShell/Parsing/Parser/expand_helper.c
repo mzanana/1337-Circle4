@@ -30,12 +30,12 @@ int	ft_strcmp(char *s1, char *s2)
 	return (((unsigned char *)s1)[i] - ((unsigned char *)s2)[i]);
 }
 
-int var_start(char c)
+int	var_start(char c)
 {
 	return (ft_isalpha(c) || c == '_');
 }
 
-int var_middle(char c)
+int	var_middle(char c)
 {
 	return (ft_isalnum(c) || c == '_');
 }
