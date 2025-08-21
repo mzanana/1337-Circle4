@@ -1,33 +1,5 @@
 #include "../parsing_hf.h"
 
-// void	asterisk_or_args(char *arg, t_cmd *cmd)
-// {
-// 	if (arg && ft_strchr(arg, '*'))
-// 	{
-// 		if (!join_current_dir(cmd, arg))
-// 			add_to_argv(cmd, arg);
-// 		else
-// 			free(arg);
-// 	}
-// 	else if (arg)
-// 		add_to_argv(cmd, arg);
-// }
-
-// int	asterisk_in_filename(char *target, t_cmd *cmd, t_token *tok)
-// {
-// 	char	*ast_tar;
-
-// 	ast_tar = join_current_dir_redi(target);
-// 	if (ast_tar)
-// 		add_redirection(cmd, type_redir(tok), ast_tar);
-// 	else
-// 	{
-// 		g_herdoc_stop = true;
-// 		write(2, "wild_card error\n", 16);
-// 	}
-// 	return (1);
-// }
-
 char	*get_single_file_or_null(char *patern)
 {
 	DIR				*dir_files;
@@ -55,35 +27,6 @@ char	*get_single_file_or_null(char *patern)
 	else
 		filename = ft_strdup(patern);
 	return (closedir(dir_files), filename);
-}
-
-char	*join_current_dir_redi(char *patern)
-{
-	char	*new_target;
-
-	new_target = get_single_file_or_null(patern);
-	// free(patern);
-	return (new_target);
-}
-
-char	*ft_strstr(char *str, char *little, size_t z)
-{
-	size_t	i;
-	size_t	j;
-
-	if (*little == '\0')
-		return (str);
-	i = 0;
-	while (str && str[i])
-	{
-		j = 0;
-		while (little && str[i + j] == little[j] && j < z)
-			j++;
-		if (j == z)
-			return (&str[i]);
-		i++;
-	}
-	return (NULL);
 }
 
 bool	ends_with_substr(char *str, char *end, size_t i)
@@ -164,7 +107,7 @@ bool	join_current_dir(t_cmd *cmd, char *patern)
 			continue ;
 		if (wildcmp(dir->d_name, patern))
 		{
-            cmd_argv_fill(cmd, ft_strdup2(dir->d_name));
+			cmd_argv_fill(cmd, ft_strdup2(dir->d_name));
 			added = true;
 		}
 	}
