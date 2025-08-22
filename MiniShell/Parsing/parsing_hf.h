@@ -6,7 +6,7 @@
 /*   By: anaamaja <anaamaja@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/22 02:00:42 by anaamaja          #+#    #+#             */
-/*   Updated: 2025/08/22 02:00:43 by anaamaja         ###   ########.fr       */
+/*   Updated: 2025/08/22 03:45:26 by anaamaja         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,9 +42,9 @@ typedef enum e_token_type
 
 typedef struct s_gc
 {
-	void		*ptr;
-	struct s_gc	*next;
-}				t_gc;
+	void			*ptr;
+	struct s_gc		*next;
+}					t_gc;
 
 typedef struct s_token
 {
@@ -96,7 +96,7 @@ typedef struct s_exp_vars
 }					t_exp_vars;
 
 // Functions Prototypes :
-int	env_len(char *str, int *i, t_env *env);
+int					env_len(char *str, int *i, t_env *env);
 char				*ft_readline(const char *str);
 char				*ft_strndup(char *str, size_t n);
 int					is_operator(char c);
@@ -124,7 +124,6 @@ bool				check_tokens(t_token *tokens, char **line);
 
 void				expand_into(char *dst, char *src, t_exp_vars *vars,
 						t_env *env);
-// void	expand_into(char *dst, char *src, char *map, char *nmap, t_env *env);
 bool				process_all_heredocs(t_cmd *cmds, t_env *env);
 void				cleanup_heredocs(t_cmd *cmd);
 int					new_len(char *s, int heredoc, t_env *env);
@@ -148,7 +147,6 @@ void				handle_variable_expansion(char *dst, char *src,
 						t_exp_vars *vars, t_env *env);
 void				fill_nmap_and_dst(char *dst, char *src, t_exp_vars *vars);
 char				*ft_substr2(char const *s, unsigned int start, size_t len);
-// int	ft_strcmp(const char *s1, const char *s2);
 int					var_start(char c);
 int					var_middle(char c);
 int					quote_checker(char c, int *sq, int *dq, int *cnt);

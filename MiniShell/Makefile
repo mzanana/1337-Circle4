@@ -1,34 +1,39 @@
-CC = cc -Wall -Wextra -Werror
-CFLAGS =   -ggdb3 -g3
-LINKERS = -lft -lreadline
-
-SRC_FILES= $(wildcard ./*.c ./execution/*.c ./execution/builtins/*.c ./Parsing/*.c ./Parsing/Parser/*.c ./Parsing/Lexer/*.c)
-SRC_OBJ= $(SRC_FILES:%.c=%.o)
-
-
+CC = cc
+CFLAGS = -Wall -Wextra -Werror 
 LIBFT_DIR = Libft
 LIBFT = $(LIBFT_DIR)/libft.a
-NAME=minishell
 
-all: libft_rule $(NAME)
+SRC = execution/builtins/export_utils.c execution/builtins/ft_cd.c execution/builtins/ft_echo.c execution/builtins/ft_env.c execution/builtins/ft_exit.c \
+		execution/builtins/ft_export.c execution/builtins/ft_pwd.c execution/builtins/ft_unset.c execution/builtins/init_env_list.c execution/envp_utils.c \
+		execution/find_cmd_path.c execution/pipe_child.c execution/pipe_exec.c execution/pipe_utils.c execution/redirections.c execution/run_cmd.c \
+		execution/signals.c execution/status.c execution/utils.c Parsing/Lexer/lexer_utils.c Parsing/Lexer/lexer_utils2.c Parsing/Lexer/lexer.c \
+		Parsing/Lexer/syntax_checker_helper.c Parsing/Lexer/syntax_checker.c Parsing/Parser/expand_helper.c Parsing/Parser/expand_helper2.c \
+		Parsing/Parser/expand_length.c Parsing/Parser/expand.c Parsing/Parser/heredoc_utils.c Parsing/Parser/heredoc_utils2.c Parsing/Parser/heredoc.c \
+		Parsing/Parser/parser_helper.c Parsing/Parser/parser_helper2.c Parsing/Parser/parser.c Parsing/Parser/wildcard_helper.c Parsing/Parser/wildcard.c \
+		Parsing/parsing_main.c G_collector.c main.c
 
-libft_rule:
-	$(MAKE) -s -C $(LIBFT_DIR)
+OBJ = $(SRC:%.c=%.o)
+NAME = minishell
+RM = rm -f
 
-$(NAME): $(SRC_OBJ) $(LIBFT)
-	@$(CC) $(SRC_OBJ) -L$(LIBFT_DIR) $(LINKERS) -o $(NAME)
+all: $(NAME)
 
-clean: 
-	$(RM) $(SRC_OBJ) $(OBJ_BONUS)
-	$(MAKE) -s -C $(LIBFT_DIR) clean
+$(NAME): $(OBJ) $(LIBFT)
+	$(CC) $(CFLAGS) $(OBJ) $(LIBFT) -lreadline -o $(NAME)
 
-fclean:
-	$(RM) $(SRC_OBJ) $(OBJ_BONUS)
-	$(RM) $(NAME)
-	$(MAKE) -s -C $(LIBFT_DIR) fclean
 
+clean:
+	@$(RM) $(OBJ)
+	@$(MAKE) clean -C $(LIBFT_DIR)
+
+fclean: clean
+	@$(RM) $(NAME)
+	@$(RM) $(LIBFT)
+
+$(LIBFT):
+	@$(MAKE) -C $(LIBFT_DIR)
 
 re: fclean all
 
-.PHONY: all libft_rule clean fclean re
-.SECONDARY: $(SRC_OBJ)
+.SECONDARY: $(OBJ)
+.PHONY: all clean fclean re
