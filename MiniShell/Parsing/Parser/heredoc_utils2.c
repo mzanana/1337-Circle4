@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   heredoc_utils2.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: anaamaja <anaamaja@student.42.fr>          +#+  +:+       +#+        */
+/*   By: mzanana <mzanana@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/22 00:20:11 by anaamaja          #+#    #+#             */
-/*   Updated: 2025/08/22 00:20:12 by anaamaja         ###   ########.fr       */
+/*   Updated: 2025/08/22 03:15:07 by mzanana          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,7 +55,7 @@ char	*expand_heredoc(char *str, t_env *env)
 	int		len;
 	char	*buff;
 
-	len = new_len(str, env);
+	len = new_len(str, 1, env);
 	buff = gc_calloc(sizeof(char) * len);
 	if (!buff)
 		return (NULL);

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   expand.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: anaamaja <anaamaja@student.42.fr>          +#+  +:+       +#+        */
+/*   By: mzanana <mzanana@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/22 00:20:27 by anaamaja          #+#    #+#             */
-/*   Updated: 2025/08/22 00:20:28 by anaamaja         ###   ########.fr       */
+/*   Updated: 2025/08/22 03:12:58 by mzanana          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -104,7 +104,7 @@ char	*expand_it(char *str, t_env *env)
 	t_exp_vars	vars;
 
 	vars.map = ft_map(str);
-	len = new_len(str, env);
+	len = new_len(str, 0, env);
 	vars.nmap = gc_calloc(sizeof(char) * len);
 	buff = gc_calloc(sizeof(char) * len);
 	if (!buff)

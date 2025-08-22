@@ -96,6 +96,7 @@ typedef struct s_exp_vars
 }					t_exp_vars;
 
 // Functions Prototypes :
+int	env_len(char *str, int *i, t_env *env);
 char				*ft_readline(const char *str);
 char				*ft_strndup(char *str, size_t n);
 int					is_operator(char c);
@@ -126,7 +127,7 @@ void				expand_into(char *dst, char *src, t_exp_vars *vars,
 // void	expand_into(char *dst, char *src, char *map, char *nmap, t_env *env);
 bool				process_all_heredocs(t_cmd *cmds, t_env *env);
 void				cleanup_heredocs(t_cmd *cmd);
-int					new_len(char *s, t_env *env);
+int					new_len(char *s, int heredoc, t_env *env);
 int					ft_strcmp(char *s1, char *s2);
 
 t_cmd				*handle_redirection(t_token **tokens, t_env *env,
@@ -142,7 +143,6 @@ int					status_get_tmp(void);
 char				*env_val(char *key, t_env *env);
 char				*env_val(char *key, t_env *env);
 char				*env_val(char *key, t_env *env);
-int					new_len(char *s, t_env *env);
 void				handle_exit_status(char *dst, t_exp_vars *vars);
 void				handle_variable_expansion(char *dst, char *src,
 						t_exp_vars *vars, t_env *env);

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   expand_length.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: anaamaja <anaamaja@student.42.fr>          +#+  +:+       +#+        */
+/*   By: mzanana <mzanana@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/22 00:20:23 by anaamaja          #+#    #+#             */
-/*   Updated: 2025/08/22 00:20:24 by anaamaja         ###   ########.fr       */
+/*   Updated: 2025/08/22 03:13:24 by mzanana          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,7 +55,7 @@ int	env_len(char *str, int *i, t_env *env)
 	return (ret);
 }
 
-int	new_len(char *s, t_env *env)
+int	new_len(char *s, int heredoc, t_env *env)
 {
 	int (i), (len), (sq), (dq);
 	i = 0;
@@ -64,7 +64,7 @@ int	new_len(char *s, t_env *env)
 	dq = 0;
 	while (s[i])
 	{
-		if (s[i] == '\'' || s[i] == '"')
+		if (!heredoc && (s[i] == '\'' || s[i] == '"'))
 			quote_checker(s[i], &sq, &dq, 0);
 		else if (s[i] == '$' && !sq && s[i + 1] && \
 			(var_start(s[i + 1]) || s[i + 1] == '?'))
