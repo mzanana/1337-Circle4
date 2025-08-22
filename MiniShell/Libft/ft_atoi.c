@@ -3,12 +3,13 @@
 /*                                                        :::      ::::::::   */
 /*   ft_atoi.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mzanana <mzanana@student.1337.ma>          +#+  +:+       +#+        */
+/*   By: anaamaja <anaamaja@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/11/10 09:00:00 by mzanana           #+#    #+#             */
-/*   Updated: 2024/11/26 00:44:55 by mzanana          ###   ########.fr       */
+/*   Created: 2025/08/22 02:28:51 by anaamaja          #+#    #+#             */
+/*   Updated: 2025/08/22 02:28:54 by anaamaja         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
+
 #include "libft.h"
 #include <stdio.h>
 

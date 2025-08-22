@@ -3,12 +3,13 @@
 /*                                                        :::      ::::::::   */
 /*   ft_split.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mzanana <mzanana@student.1337.ma>          +#+  +:+       +#+        */
+/*   By: anaamaja <anaamaja@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/11/17 18:28:38 by mzanana           #+#    #+#             */
-/*   Updated: 2024/11/18 11:50:58 by mzanana          ###   ########.fr       */
+/*   Created: 2025/08/22 02:29:35 by anaamaja          #+#    #+#             */
+/*   Updated: 2025/08/22 02:29:37 by anaamaja         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
+
 #include "libft.h"
 
 static size_t	w_cnt(char const *str, char ch);

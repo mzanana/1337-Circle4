@@ -1,4 +1,4 @@
-CC = cc -Wall -Wextra# -Werror
+CC = cc -Wall -Wextra -Werror
 CFLAGS =   -ggdb3 -g3
 LINKERS = -lft -lreadline
 

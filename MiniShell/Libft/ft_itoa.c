@@ -3,12 +3,13 @@
 /*                                                        :::      ::::::::   */
 /*   ft_itoa.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mzanana <mzanana@student.1337.ma>          +#+  +:+       +#+        */
+/*   By: anaamaja <anaamaja@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/11/18 18:12:11 by mzanana           #+#    #+#             */
-/*   Updated: 2024/11/18 21:18:58 by mzanana          ###   ########.fr       */
+/*   Created: 2025/08/22 02:29:23 by anaamaja          #+#    #+#             */
+/*   Updated: 2025/08/22 02:29:24 by anaamaja         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
+
 #include "libft.h"
 
 static int	num_count(int n)
