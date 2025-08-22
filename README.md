@@ -20,9 +20,9 @@
 ## Processes
 
 ---
-<!--<details>
+<details>
 <summary>Processes</summary>
--->
+
 # Processes
 
 
@@ -309,6 +309,8 @@ So we need another process to open the same FIFO file for reading.
 </details>
   
 ---
+<details>
+<summary>Shell & Bash</summary>
 
 # Shell & Bash
 
@@ -401,3 +403,6 @@ A parameter is set if it has been assigned a value, the null string is a **valid
 A variable is assigned to using a statement of the form :  
 `name=[value]`  
 
+</details>
+
+---
