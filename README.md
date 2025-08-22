@@ -1,6 +1,9 @@
 <h1 align= "center"><b>Minishell</b></h1>
 
 ---
+<p align="center"><img src="https://i.imgur.com/qPpvSm9.png" width="600"></p>
+
+---
  **Table of Contents :**  
 1. [Processes](#processes)   
 	- [Fork Function](#Fork-Function)    
@@ -20,7 +23,7 @@
 ## Processes
 
 ---
-<details>
+<details> <
 <summary>Processes</summary>
 
 # Processes
@@ -309,7 +312,7 @@ So we need another process to open the same FIFO file for reading.
 </details>
   
 ---
-<details>
+<details>   <
 <summary>Shell & Bash</summary>
 
 # Shell & Bash
@@ -403,6 +406,7 @@ A parameter is set if it has been assigned a value, the null string is a **valid
 A variable is assigned to using a statement of the form :  
 `name=[value]`  
 
-</details>
+</details><
 
 ---
+
