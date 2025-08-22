@@ -20,9 +20,6 @@
 		- [Pipelines](#pipelines)  
 	- [Shell Parameters](#shell-parameters)  
 ---
-## Processes
-
----
 <details> <
 <summary>Processes</summary>
 
@@ -405,8 +402,6 @@ A parameter is set if it has been assigned a value, the null string is a **valid
 
 A variable is assigned to using a statement of the form :  
 `name=[value]`  
-
-</details><
 
 ---
 
