@@ -1,11 +1,5 @@
 #include "./Parsing/parsing_hf.h"
 
-typedef struct s_gc
-{
-	void		*ptr;
-	struct s_gc	*next;
-}				t_gc;
-
 void	free_all(t_gc **head)
 {
 	t_gc	*tmp;

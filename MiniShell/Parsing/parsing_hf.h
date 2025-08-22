@@ -28,6 +28,12 @@ typedef enum e_token_type
 	T_HEREDOC
 }					t_token_type;
 
+typedef struct s_gc
+{
+	void		*ptr;
+	struct s_gc	*next;
+}				t_gc;
+
 typedef struct s_token
 {
 	char			*value;
